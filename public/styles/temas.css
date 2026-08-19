@@ -31,13 +31,13 @@ a:hover { color: var(--primaria-escura) }
 .marca { font-size: 1.1rem; font-weight: 700; color: var(--primaria); text-decoration: none; display: flex; align-items: center; gap: 0.4rem }
 .marca svg { flex: none }
 .nav-principal { display: flex; gap: 0.75rem; font-size: 0.92rem; flex-wrap: wrap }
-.nav-principal a { color: var(--mutado); text-decoration: none; padding: 0.2rem 0.3rem; transition: color 0.15s ease }
+.nav-principal a { color: var(--mutado-claro); text-decoration: none; padding: 0.2rem 0.3rem; transition: color 0.15s ease }
 .nav-principal a:hover { color: var(--primaria) }
 
 .controles-sitio { display: flex; align-items: center; gap: 0.5rem }
 
 /* ── Botão de tema ───────────────────────────────────────── */
-.botao-tema { background: transparent; border: none; color: var(--mutado); cursor: pointer; padding: 0.35rem; border-radius: var(--raio); display: flex; align-items: center; justify-content: center; transition: background 0.15s ease }
+.botao-tema { background: transparent; border: none; color: var(--mutado-claro); cursor: pointer; padding: 0.35rem; border-radius: var(--raio); display: flex; align-items: center; justify-content: center; transition: background 0.15s ease }
 .botao-tema:hover { background: var(--borda2); color: var(--texto) }
 .icone-sol, .icone-lua { display: none }
 html[data-tema='dark'] .icone-sol { display: block }
@@ -45,7 +45,7 @@ html[data-tema='light'] .icone-lua { display: block }
 
 /* ── Seletor de modo ─────────────────────────────────────── */
 .seletor-modo { display: flex; gap: 2px; background: var(--superficie2); border-radius: var(--raio); padding: 3px; border: 1px solid var(--borda) }
-.botao-modo { background: transparent; border: none; color: var(--mutado); font-size: 1rem; padding: 0.3rem 0.5rem; border-radius: calc(var(--raio) - 2px); cursor: pointer; transition: all 0.15s ease; line-height: 1 }
+.botao-modo { background: transparent; border: none; color: var(--mutado-claro); font-size: 1rem; padding: 0.3rem 0.5rem; border-radius: calc(var(--raio) - 2px); cursor: pointer; transition: all 0.15s ease; line-height: 1 }
 .botao-modo:hover { background: var(--borda2); color: var(--texto) }
 .botao-modo.ativo { background: var(--primaria); color: #000; box-shadow: 0 2px 6px rgba(56, 189, 248, 0.3) }
 [data-modo-badge] { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--superficie); border: 1px solid var(--borda2); color: var(--texto); padding: 0.5rem 1rem; border-radius: var(--raio2); font-size: 0.85rem; font-weight: 600; box-shadow: var(--sombra-media); opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 200 }
@@ -54,16 +54,16 @@ html[data-tema='light'] .icone-lua { display: block }
 .badge-tempo-real { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 999px; margin-top: 0.3rem; letter-spacing: 0.04em }
 .badge-vivo { background: var(--verde); color: #000 }
 .badge-estatico { background: var(--amber); color: #000 }
-.badge-cache { background: var(--mutado); color: var(--texto) }
-.badge-offline { background: var(--borda); color: var(--mutado) }
+.badge-cache { background: var(--amber); color: #000 }
+.badge-offline { background: var(--borda); color: var(--mutado-claro) }
 
 /* ── Main ────────────────────────────────────────────────── */
 main { padding-top: 1.25rem; padding-bottom: 3rem; min-height: 60vh }
 .hero { margin-bottom: 1.4rem }
-.hero p { color: var(--mutado); max-width: 60ch }
-.subtitulo { color: var(--mutado); margin: 0 0 1rem }
-.trilha { font-size: 0.85rem; color: var(--mutado); margin-bottom: 0.6rem }
-.trilha a { color: var(--mutado) }
+.hero p { color: var(--mutado-claro); max-width: 60ch }
+.subtitulo { color: var(--texto); margin: 0 0 1rem }
+.trilha { font-size: 0.85rem; color: var(--texto); margin-bottom: 0.6rem }
+.trilha a { color: var(--primaria) }
 
 /* ── Tipografia ──────────────────────────────────────────── */
 h1 { font-size: 1.45rem; line-height: 1.25; margin: 0.3rem 0 0.35rem }
@@ -77,15 +77,15 @@ h2 { font-size: 1.15rem; margin: 1.4rem 0 0.6rem }
 .campo-obrigatorio { color: var(--rose) }
 .campo-controle { display: flex; align-items: center; gap: 0.4rem; border: 1px solid var(--borda); border-radius: 8px; background: var(--fundo) }
 .campo-controle:focus-within { border-color: var(--primaria); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.22) }
-.campo-prefixo, .campo-sufixo { color: var(--mutado); padding: 0 0.55rem; font-size: 0.95rem; white-space: nowrap }
+.campo-prefixo, .campo-sufixo { color: var(--mutado-claro); padding: 0 0.55rem; font-size: 0.95rem; white-space: nowrap }
 .campo input, .campo select { width: 100%; border: none; background: transparent; padding: 0.65rem 0.6rem; font-size: 1rem; font-family: inherit; color: var(--texto); min-width: 0 }
-.campo input::placeholder { color: var(--mutado); opacity: 1 }
-.campo select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--mutado) 50%), linear-gradient(135deg, var(--mutado) 50%, transparent 50%); background-position: calc(100% - 18px) 55%, calc(100% - 13px) 55%; background-size: 5px 5px; background-repeat: no-repeat }
-.campo-ajuda { color: var(--mutado); font-size: 0.8rem }
+.campo input::placeholder { color: var(--mutado-claro); opacity: 1 }
+.campo select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--mutado-claro) 50%), linear-gradient(135deg, var(--mutado-claro) 50%, transparent 50%); background-position: calc(100% - 18px) 55%, calc(100% - 13px) 55%; background-size: 5px 5px; background-repeat: no-repeat }
+.campo-ajuda { color: var(--mutado-claro); font-size: 0.8rem }
 .campocheck { flex-direction: row; align-items: flex-start; gap: 0.5rem; font-weight: 400; font-size: 0.9rem }
 .campocheck input { width: auto; margin-top: 0.2rem; flex: none }
 .campo-extra { border: 1px dashed var(--borda2); border-radius: 8px; padding: 0.6rem; display: grid; gap: 0.6rem }
-.campo-extra-titulo { font-size: 0.85rem; font-weight: 600; color: var(--mutado); margin: 0 }
+.campo-extra-titulo { font-size: 0.85rem; font-weight: 600; color: var(--mutado-claro); margin: 0 }
 
 /* ── Botões ──────────────────────────────────────────────── */
 .botao { display: block; margin-top: 1rem; width: 100%; background: var(--gradiente-botao); color: #fff; border: none; border-radius: 8px; padding: 0.8rem 1rem; font-size: 1.05rem; font-weight: 700; font-family: inherit; cursor: pointer; position: relative; overflow: hidden; transition: filter 0.15s ease }
@@ -104,7 +104,7 @@ h2 { font-size: 1.15rem; margin: 1.4rem 0 0.6rem }
 .resultado-linha.total { border-top: 1px solid var(--borda); margin-top: 0.3rem; padding-top: 0.55rem; font-size: 1.05rem }
 .resultado-linha.destaque { color: var(--acento); font-size: 1.1rem }
 .resultado-erro { color: var(--rose); font-weight: 600; margin: 0 }
-.resultado-nota { font-size: 0.82rem; color: var(--mutado); margin: 0.7rem 0 0 }
+.resultado-nota { font-size: 0.82rem; color: var(--mutado-claro); margin: 0.7rem 0 0 }
 
 /* ── Grade de calculadoras ───────────────────────────────── */
 .grade-calculadoras { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 0.9rem }
@@ -118,18 +118,18 @@ h2 { font-size: 1.15rem; margin: 1.4rem 0 0.6rem }
 .cartao-icone svg { width: 20px; height: 20px }
 .cartao-etiqueta { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--acento, var(--primaria)); border: 1px solid rgba(56, 189, 248, 0.45); border-radius: 999px; padding: 0.15rem 0.55rem; white-space: nowrap }
 .cartao h3 { margin: 0 0 0.25rem; font-size: 1.02rem; color: var(--texto) }
-.cartao p { margin: 0; font-size: 0.88rem; color: var(--mutado) }
+.cartao p { margin: 0; font-size: 0.88rem; color: var(--mutado-claro) }
 
 /* ── Rodapé ──────────────────────────────────────────────── */
 .rodape { background: var(--superficie); border-top: 1px solid var(--borda); padding: 1.5rem 0 5rem; margin-top: 3rem }
 .rodape-inner { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: space-between }
-.rodape-aviso p { margin: 0 0 0.5rem; font-size: 0.85rem; line-height: 1.55 }
+.rodape-aviso p { margin: 0 0 0.5rem; font-size: 0.85rem; line-height: 1.55; color: var(--texto) }
 .rodape-links { display: flex; flex-wrap: wrap; gap: 0.75rem; font-size: 0.85rem }
-.rodape-links a { color: var(--mutado); text-decoration: none }
+.rodape-links a { color: var(--mutado-claro); text-decoration: none }
 .rodape-links a:hover { color: var(--primaria) }
-.rodape-link { background: none; border: none; padding: 0; font: inherit; color: var(--mutado); font-size: 0.85rem; cursor: pointer; text-decoration: underline }
+.rodape-link { background: none; border: none; padding: 0; font: inherit; color: var(--mutado-claro); font-size: 0.85rem; cursor: pointer; text-decoration: underline }
 .rodape-link:hover { color: var(--primaria) }
-.rodape-meta { flex: 1; min-width: 250px; font-size: 0.8rem; color: var(--mutado); margin-top: 1rem; line-height: 1.55 }
+.rodape-meta { flex: 1; min-width: 250px; font-size: 0.8rem; color: var(--mutado-claro); margin-top: 1rem; line-height: 1.55 }
 .rodape-github { font-weight: 600; margin-left: 0.5rem }
 
 /* ── Consentimento ───────────────────────────────────────── */
@@ -152,7 +152,7 @@ h2 { font-size: 1.15rem; margin: 1.4rem 0 0.6rem }
 .diagnostico { margin: 1.2rem 0 0; border: 1px solid var(--borda); border-radius: var(--raio2); background: var(--superficie); padding: 0.6rem 0.9rem; font-size: 0.85rem }
 .diagnostico summary { cursor: pointer; font-weight: 600; color: var(--texto); user-select: none }
 .diagnostico-lista { display: grid; grid-template-columns: minmax(10rem, 1fr) 2fr; gap: 0.25rem 0.75rem; margin: 0.75rem 0 }
-.diagnostico-lista dt { color: var(--mutado) }
+.diagnostico-lista dt { color: var(--mutado-claro) }
 .diagnostico-lista dd { margin: 0; font-weight: 600 }
 
 /* ── Utilidades de acessibilidade ────────────────────────── */
@@ -161,7 +161,7 @@ h2 { font-size: 1.15rem; margin: 1.4rem 0 0.6rem }
 /* ── Tabelas fixas ───────────────────────────────────────── */
 .tabela-fixa { width: 100%; border-collapse: collapse; font-size: 0.9rem }
 .tabela-fixa th, .tabela-fixa td { text-align: left; padding: 0.45rem 0.5rem; border: 1px solid var(--borda) }
-.tabela-fixa th { font-weight: 600; color: var(--mutado); background: var(--superficie2) }
+.tabela-fixa th { font-weight: 600; color: var(--texto); background: var(--superficie2) }
 
 /* ── Pagina de conteúdo longo ────────────────────────────── */
 .conteudo-longo { background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio2); box-shadow: var(--sombra); padding: 1rem }
@@ -173,10 +173,10 @@ h2 { font-size: 1.15rem; margin: 1.4rem 0 0.6rem }
 .pagina-404 { text-align: center; padding: 2.5rem 1rem }
 
 /* ── Vigência ────────────────────────────────────────────── */
-.vigencia { display: inline-block; font-size: 0.82rem; color: var(--mutado); background: var(--superficie); border: 1px solid var(--borda); border-radius: 999px; padding: 0.2rem 0.7rem; margin: 0 0 0.4rem }
+.vigencia { display: inline-block; font-size: 0.82rem; color: var(--texto); background: var(--superficie); border: 1px solid var(--borda); border-radius: 999px; padding: 0.2rem 0.7rem; margin: 0 0 0.4rem }
 
 /* ── Anúncios ────────────────────────────────────────────── */
-.anuncio { font-size: 0.75rem; color: var(--mutado) }
+.anuncio { font-size: 0.75rem; color: var(--mutado-claro) }
 .anuncio-rotulo { display: block; margin-bottom: 0.2rem }
 .anuncio--resultado { margin-top: 1.2rem; min-height: 100px; background: var(--superficie); border: 1px solid var(--borda); border-radius: 8px; padding: 0.5rem }
 .anuncio--secundario { margin-top: 1.2rem; min-height: 60px; background: var(--superficie); border: 1px solid var(--borda); border-radius: 8px; padding: 0.4rem 0.5rem }

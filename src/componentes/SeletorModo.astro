@@ -11,7 +11,7 @@
 <div id="badge-modo" class="badge-modo" style="display:none;"></div>
 
 <script>
-  const MODO_KEY = 'cb:modo-animacao'
+  const MODO_KEY = 'cb:modo'
   const MODOS = ['leve', 'padrao', 'rico', 'maximo'] as const
 
   function obterModoAtual(): string {
@@ -61,6 +61,9 @@
         badge.style.display = 'none'
       }, 2000)
     }
+    
+    // Disparar evento personalizado para notificar mudanças de modo
+    window.dispatchEvent(new CustomEvent('modoMudou', { detail: { modo } }))
   }
 
   function inicializar() {

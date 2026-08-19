@@ -87,6 +87,11 @@ const tituloPagina = titulo.includes(siteConfig.nome) ? titulo : titulo + ' · '
           else if (cores >= 4 && mem >= 4) modo = 'rico'
           else if (cores >= 2) modo = 'padrao'
           else modo = 'leve'
+          
+          // Salvar modo detectado
+          try {
+            window.localStorage.setItem('cb:modo', modo)
+          } catch (e) {}
         }
 
         d.setAttribute('data-modo', modo)
@@ -96,6 +101,18 @@ const tituloPagina = titulo.includes(siteConfig.nome) ? titulo : titulo + ' · '
         var tm = document.getElementById('css-temas')
         if (tk) tk.setAttribute('media', modo === 'leve' ? 'not all' : 'all')
         if (tm) tm.setAttribute('media', modo === 'leve' ? 'not all' : 'all')
+
+        // Listener para mudanças de modo em tempo real
+        if (typeof window !== 'undefined') {
+          window.addEventListener('modoMudou', function(e) {
+            var novoModo = e.detail?.modo
+            if (novoModo && ['leve', 'padrao', 'rico', 'maximo'].includes(novoModo)) {
+              d.setAttribute('data-modo', novoModo)
+              if (tk) tk.setAttribute('media', novoModo === 'leve' ? 'not all' : 'all')
+              if (tm) tm.setAttribute('media', novoModo === 'leve' ? 'not all' : 'all')
+            }
+          })
+        }
       })()
     </script>
   </head>
