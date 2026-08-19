@@ -2,14 +2,18 @@
 import BaseLayout from '../../layouts/BaseLayout.astro'
 
 const utilidades = [
-  { slug: 'calendario-clt', titulo: 'Calendário CLT', descricao: 'Veja seus próximos direitos: 13º, férias, feriados.', icone: '📅' },
-  { slug: 'conversor-salario', titulo: 'Conversor de salário', descricao: 'Salário mensal → hora, dia, semana, ano.', icone: '💰' },
-  { slug: 'clt-vs-pj', titulo: 'CLT vs PJ', descricao: 'Compare lado a lado qual escolher.', icone: '⚖️' },
-  { slug: 'conversor-moedas', titulo: 'Conversor de moedas', descricao: 'BRL ↔ USD/EUR com taxas aproximadas.', icone: '💱' },
-  { slug: 'linha-do-tempo', titulo: 'Linha do tempo financeira', descricao: 'Projeção de quanto teria guardando X por mês.', icone: '📈' },
-  { slug: 'tempo-de-trabalho', titulo: 'Tempo de trabalho', descricao: 'Quanto tempo pra comprar um celular, carro, casa?', icone: '⏱️' },
-  { slug: 'perfil-financeiro', titulo: 'Perfil financeiro', descricao: 'Quiz: qual seu estilo financeiro?', icone: '🧠' },
-  { slug: 'rastreador-inflacao', titulo: 'Rastreador de inflação', descricao: 'Quanto valia R$100 em 2010 vs hoje?', icone: '📊' }
+  { slug: 'calendario-clt', titulo: 'Calendário CLT', descricao: 'Veja seus próximos direitos: 13º, férias, feriados.', icone: '📅', categoria: 'trabalho' },
+  { slug: 'conversor-salario', titulo: 'Conversor de salário', descricao: 'Salário mensal → hora, dia, semana, ano.', icone: '💰', categoria: 'trabalho' },
+  { slug: 'clt-vs-pj', titulo: 'CLT vs PJ', descricao: 'Compare lado a lado qual escolher.', icone: '⚖️', categoria: 'trabalho' },
+  { slug: 'conversor-moedas', titulo: 'Conversor de moedas', descricao: 'BRL ↔ USD/EUR com taxas aproximadas.', icone: '💱', categoria: 'utilidade' },
+  { slug: 'linha-do-tempo', titulo: 'Linha do tempo financeira', descricao: 'Projeção de quanto teria guardando X por mês.', icone: '📈', categoria: 'investimentos' },
+  { slug: 'tempo-de-trabalho', titulo: 'Tempo de trabalho', descricao: 'Quanto tempo pra comprar um celular, carro, casa?', icone: '⏱️', categoria: 'trabalho' },
+  { slug: 'perfil-financeiro', titulo: 'Perfil financeiro', descricao: 'Quiz: qual seu estilo financeiro?', icone: '🧠', categoria: 'utilidade' },
+  { slug: 'rastreador-inflacao', titulo: 'Rastreador de inflação', descricao: 'Quanto valia R$100 em 2010 vs hoje?', icone: '📊', categoria: 'investimentos' },
+  { slug: 'orcamento-estudantil', titulo: 'Orçamento Estudantil', descricao: 'Planeje suas finanças como estudante.', icone: '🎓', categoria: 'estudos' },
+  { slug: 'plano-estudos', titulo: 'Plano de Estudos', descricao: 'Organize seus horários de estudos.', icone: '📚', categoria: 'estudos' },
+  { slug: 'comparador-cursos', titulo: 'Comparador de Cursos', descricao: 'Compare cursos e universidades.', icone: '🏫', categoria: 'estudos' },
+  { slug: 'tracker-estudos', titulo: 'Tracker de Estudos', descricao: 'Acompanhe seu progresso nos estudos.', icone: '✅', categoria: 'estudos' }
 ]
 ---
 
@@ -23,10 +27,10 @@ const utilidades = [
   <ul class="grade-calculadoras">
     {utilidades.map((u) => (
       <li>
-        <a class="cartao" href={'/utilidades/' + u.slug + '/'} data-categoria="utilidade">
+        <a class="cartao" href={'/utilidades/' + u.slug + '/'} data-categoria={u.categoria}>
           <div class="cartao-topo">
             <span class="cartao-icone">{u.icone}</span>
-            <span class="cartao-etiqueta">Utilidade</span>
+            <span class="cartao-etiqueta">{u.categoria === 'estudos' ? 'Estudos' : u.categoria === 'trabalho' ? 'Trabalho' : u.categoria === 'investimentos' ? 'Investimentos' : 'Utilidade'}</span>
           </div>
           <h3>{u.titulo}</h3>
           <p>{u.descricao}</p>

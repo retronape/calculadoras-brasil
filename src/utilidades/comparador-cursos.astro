@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+
+const dados = {
+  titulo: 'Comparador de Cursos',
+  descricao: 'Compare diferentes cursos e universidades para tomar a melhor decisão.',
+  rota: '/utilidades/comparador-cursos/'
+}
+---
+
+<BaseLayout titulo={dados.titulo} descricao={dados.descricao} rota={dados.rota}>
+  <article class="pagina-calculadora" data-categoria="estudos">
+    <div class="conteudo-principal">
+      <nav class="trilha">
+        <a href="/">Início</a>
+        <span aria-hidden="true"> / </span>
+        <a href="/utilidades/">Utilidades</a>
+        <span aria-hidden="true"> / </span>
+        <span aria-current="page">Comparador de Cursos</span>
+      </nav>
+      
+      <h1>Comparador de Cursos</h1>
+      <p class="subtitulo">Compare diferentes cursos e universidades para tomar a melhor decisão.</p>
+      
+      <div class="formulario">
+        <div class="campos">
+          <div class="campo"><label for="curso1">Curso 1</label><input type="text" id="curso1" placeholder="Ex: Engenharia de Software" required></div>
+          <div class="campo"><label for="universidade1">Universidade 1</label><input type="text" id="universidade1" placeholder="Ex: USP" required></div>
+          <div class="campo"><label for="duracao1">Duração (anos)</label><input type="number" id="duracao1" min="1" max="10" step="0.5" value="5" required></div>
+          <div class="campo"><label for="mensalidade1">Mensalidade (R$)</label><input type="number" id="mensalidade1" min="0" step="0.01" value="0" required></div>
+          <div class="campo"><label for="curso2">Curso 2</label><input type="text" id="curso2" placeholder="Ex: Ciência da Computação" required></div>
+          <div class="campo"><label for="universidade2">Universidade 2</label><input type="text" id="universidade2" placeholder="Ex: UNICAMP" required></div>
+          <div class="campo"><label for="duracao2">Duração (anos)</label><input type="number" id="duracao2" min="1" max="10" step="0.5" value="4" required></div>
+          <div class="campo"><label for="mensalidade2">Mensalidade (R$)</label><input type="number" id="mensalidade2" min="0" step="0.01" value="0" required></div>
+          <button type="button" class="botao" id="comparar-btn">Comparar Cursos</button>
+        </div>
+      </div>
+      
+      <section id="resultado" class="resultado" aria-live="polite">
+        <h2 class="resultado-titulo">Comparação</h2>
+        <div class="resultado-conteudo">
+          <div class="resultado-grupo">
+            <div class="resultado-grupo-titulo">Resumo</div>
+            <div class="resultado-linha"><span>Total Investido (Curso 1)</span><strong id="total1">R$ 0,00</strong></div>
+            <div class="resultado-linha"><span>Total Investido (Curso 2)</span><strong id="total2">R$ 0,00</strong></div>
+            <div class="resultado-linha total"><span>Diferença</span><strong id="diferenca">R$ 0,00</strong></div>
+          </div>
+          <div class="resultado-grupo">
+            <div class="resultado-grupo-titulo">Detalhes</div>
+            <div class="resultado-linha"><span>Curso 1</span><strong id="detalhes1">-</strong></div>
+            <div class="resultado-linha"><span>Curso 2</span><strong id="detalhes2">-</strong></div>
+          </div>
+        </div>
+      </section>
+      
+      <section class="explicacao">
+        <h2>Como funciona</h2>
+        <p>Esta ferramenta ajuda a comparar diferentes cursos e universidades considerando custo total e duração.</p>
+        <p>Valores são simulações para fins educacionais. Para informações oficiais, consulte os sites das instituições.</p>
+        <p>Considere fatores além do custo, como qualidade do ensino, oportunidades de estágio e mercado de trabalho.</p>
+      </section>
+    </div>
+    
+    <aside class="lateral">
+      <div class="ad-container" data-ad-posicao="secundario">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="0000000000" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      </div>
+    </aside>
+  </article>
+</BaseLayout>
+
+<script>
+  function val(id: string): HTMLInputElement | null { return document.getElementById(id) as HTMLInputElement | null }
+  function fmt(v: number) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v) }
+  function setTxt(id: string, txt: string) { const e = document.getElementById(id); if (e) e.textContent = txt }
+
+  document.getElementById('comparar-btn')?.addEventListener('click', () => {
+    const c1 = val('curso1')?.value || 'Curso 1'
+    const u1 = val('universidade1')?.value || 'Universidade 1'
+    const d1 = parseFloat(val('duracao1')?.value || '5')
+    const m1 = parseFloat(val('mensalidade1')?.value || '0')
+    const c2 = val('curso2')?.value || 'Curso 2'
+    const u2 = val('universidade2')?.value || 'Universidade 2'
+    const d2 = parseFloat(val('duracao2')?.value || '4')
+    const m2 = parseFloat(val('mensalidade2')?.value || '0')
+    
+    const t1 = m1 * 12 * d1, t2 = m2 * 12 * d2
+    setTxt('total1', fmt(t1))
+    setTxt('total2', fmt(t2))
+    setTxt('diferenca', fmt(Math.abs(t1 - t2)))
+    setTxt('detalhes1', `${c1} - ${u1} (${d1} anos)`)
+    setTxt('detalhes2', `${c2} - ${u2} (${d2} anos)`)
+    const res = document.getElementById('resultado'); if (res) res.style.display = 'block'
+  })
+</script>

@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+
+const dados = {
+  titulo: 'Orçamento Estudantil',
+  descricao: 'Planeje suas finanças como estudante com esta planilha de orçamento mensal.',
+  rota: '/utilidades/orcamento-estudantil/'
+}
+---
+
+<BaseLayout titulo={dados.titulo} descricao={dados.descricao} rota={dados.rota}>
+  <article class="pagina-calculadora" data-categoria="estudos">
+    <div class="conteudo-principal">
+      <nav class="trilha">
+        <a href="/">Início</a>
+        <span aria-hidden="true"> / </span>
+        <a href="/utilidades/">Utilidades</a>
+        <span aria-hidden="true"> / </span>
+        <span aria-current="page">Orçamento Estudantil</span>
+      </nav>
+      
+      <h1>Orçamento Estudantil</h1>
+      <p class="subtitulo">Planeje suas finanças como estudante com esta planilha de orçamento mensal.</p>
+      
+      <div class="formulario">
+        <div class="campos">
+          <div class="campo">
+            <label for="renda-mensal">Renda mensal (R$)</label>
+            <input type="number" id="renda-mensal" min="0" step="0.01" inputmode="decimal" required>
+          </div>
+          <div class="campo">
+            <label for="alimentacao">Alimentação (R$)</label>
+            <input type="number" id="alimentacao" min="0" step="0.01" inputmode="decimal" value="0">
+          </div>
+          <div class="campo">
+            <label for="transporte">Transporte (R$)</label>
+            <input type="number" id="transporte" min="0" step="0.01" inputmode="decimal" value="0">
+          </div>
+          <div class="campo">
+            <label for="moradia">Moradia (R$)</label>
+            <input type="number" id="moradia" min="0" step="0.01" inputmode="decimal" value="0">
+          </div>
+          <div class="campo">
+            <label for="educacao">Educação (R$)</label>
+            <input type="number" id="educacao" min="0" step="0.01" inputmode="decimal" value="0">
+          </div>
+          <div class="campo">
+            <label for="lazer">Lazer (R$)</label>
+            <input type="number" id="lazer" min="0" step="0.01" inputmode="decimal" value="0">
+          </div>
+          <div class="campo">
+            <label for="outros">Outros (R$)</label>
+            <input type="number" id="outros" min="0" step="0.01" inputmode="decimal" value="0">
+          </div>
+          <button type="button" class="botao" id="calcular-btn">Calcular Orçamento</button>
+        </div>
+      </div>
+      
+      <section id="resultado" class="resultado" aria-live="polite">
+        <h2 class="resultado-titulo">Resultado</h2>
+        <div class="resultado-conteudo">
+          <div class="resultado-grupo">
+            <div class="resultado-grupo-titulo">Resumo</div>
+            <div class="resultado-linha"><span>Renda Total</span><strong id="renda-total">R$ 0,00</strong></div>
+            <div class="resultado-linha"><span>Despesas Totais</span><strong id="despesas-totais">R$ 0,00</strong></div>
+            <div class="resultado-linha total"><span>Saldo</span><strong id="saldo">R$ 0,00</strong></div>
+          </div>
+          <div class="resultado-grupo">
+            <div class="resultado-grupo-titulo">Distribuição</div>
+            <div class="resultado-linha"><span>Alimentação</span><strong id="perc-alimentacao">0%</strong></div>
+            <div class="resultado-linha"><span>Transporte</span><strong id="perc-transporte">0%</strong></div>
+            <div class="resultado-linha"><span>Moradia</span><strong id="perc-moradia">0%</strong></div>
+            <div class="resultado-linha"><span>Educação</span><strong id="perc-educacao">0%</strong></div>
+            <div class="resultado-linha"><span>Lazer</span><strong id="perc-lazer">0%</strong></div>
+            <div class="resultado-linha"><span>Outros</span><strong id="perc-outros">0%</strong></div>
+          </div>
+        </div>
+      </section>
+      
+      <section class="explicacao">
+        <h2>Como funciona</h2>
+        <p>O orçamento estudantil ajuda a planejar e controlar as finanças durante os anos de estudo.</p>
+        <p>Uma regra recomendável é que despesas fixas (moradia, alimentação, transporte) não ultrapassem 70% da renda.</p>
+        <p>Tente reservar pelo menos 10% da renda para emergências ou investimentos de curto prazo.</p>
+      </section>
+    </div>
+    
+    <aside class="lateral">
+      <div class="ad-container" data-ad-posicao="secundario">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="0000000000" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      </div>
+    </aside>
+  </article>
+</BaseLayout>
+
+<script>
+  function val(id: string): number { return parseFloat((document.getElementById(id) as HTMLInputElement | null)?.value || '0') }
+  function setTxt(id: string, txt: string) { const e = document.getElementById(id); if (e) e.textContent = txt }
+  function fmt(v: number) { return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v) }
+  function perc(v: number, total: number) { return total > 0 ? ((v / total) * 100).toFixed(1) + '%' : '0%' }
+
+  document.getElementById('calcular-btn')?.addEventListener('click', () => {
+    const r = val('renda-mensal')
+    const a = val('alimentacao'), t = val('transporte'), m = val('moradia')
+    const e = val('educacao'), l = val('lazer'), o = val('outros')
+    const total = a + t + m + e + l + o
+    setTxt('renda-total', fmt(r))
+    setTxt('despesas-totais', fmt(total))
+    setTxt('saldo', fmt(r - total))
+    setTxt('perc-alimentacao', perc(a, r))
+    setTxt('perc-transporte', perc(t, r))
+    setTxt('perc-moradia', perc(m, r))
+    setTxt('perc-educacao', perc(e, r))
+    setTxt('perc-lazer', perc(l, r))
+    setTxt('perc-outros', perc(o, r))
+    const res = document.getElementById('resultado'); if (res) res.style.display = 'block'
+  })
+</script>

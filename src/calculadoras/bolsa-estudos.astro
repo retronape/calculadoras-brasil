@@ -1,0 +1,71 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro'
+import CampoFormulario from '../componentes/CampoFormulario.astro'
+
+const { meta } = Astro.props
+---
+
+<CalculatorLayout meta={meta}>
+  <CampoFormulario nome="renda" rotulo="Renda familiar mensal (R$)" tipo="number" min="0" step="0.01" inputmode="decimal" obrigatorio />
+  <CampoFormulario nome="dependentes" rotulo="Número de dependentes (incluindo você)" tipo="number" min="1" step="1" valor="1" obrigatorio />
+  <CampoFormulario
+    nome="curso"
+    rotulo="Tipo de curso"
+    tipo="select"
+    obrigatorio
+    opcoes={[
+      { valor: 'graduacao', rotulo: 'Graduação' },
+      { valor: 'pos', rotulo: 'Pós-graduação' },
+      { valor: 'tecnico', rotulo: 'Técnico' }
+    ]}
+  />
+</CalculatorLayout>
+
+<script>
+  import { mostrarResultado, mostrarErro, linha, grupo } from '../lib/resultado.ts'
+
+  const form = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+
+      const fd = new FormData(form)
+      const renda = parseFloat(fd.get('renda') as string || '0')
+      const dependentes = parseInt(fd.get('dependentes') as string || '1')
+      const curso = fd.get('curso') as string || 'graduacao'
+
+      if (!renda || renda <= 0) {
+        mostrarErro('Informe a renda familiar mensal.')
+        return
+      }
+
+      const rendaPerCapita = renda / dependentes
+
+      let percentual = 0
+      if (rendaPerCapita <= 1500) percentual = 100
+      else if (rendaPerCapita <= 3000) percentual = 75
+      else if (rendaPerCapita <= 5000) percentual = 50
+      else percentual = 25
+
+      const mediaMensalidade: Record<string, number> = { graduacao: 1200, pos: 2500, tecnico: 800 }
+      const mensalidade = mediaMensalidade[curso] || 1200
+      const valorBolsa = mensalidade * (percentual / 100)
+      const valorAluno = mensalidade - valorBolsa
+
+      const fmt = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v)
+
+      mostrarResultado(
+        grupo('Elegibilidade', [
+          linha('Renda per capita', fmt(rendaPerCapita)),
+          linha('Percentual de bolsa', percentual + '%'),
+          linha('Elegível?', percentual >= 50 ? 'Sim' : 'Parcial')
+        ]) +
+        grupo('Valores', [
+          linha('Mensalidade média', fmt(mensalidade)),
+          linha('Valor da bolsa', fmt(valorBolsa)),
+          linha('Valor que você pagaria', fmt(valorAluno), 'total')
+        ])
+      )
+    })
+  }
+</script>

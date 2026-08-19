@@ -36,12 +36,15 @@ const tituloPagina = titulo.includes(siteConfig.nome) ? titulo : titulo + ' · '
     -->
     <style is:global>
       html, body { margin: 0; padding: 0 }
-      body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif; line-height: 1.55; color: #1c2733; background: #fff; padding: 0 0 2rem }
+      body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif; line-height: 1.55; color: #1c2733; background: #fff; padding: 0 0 2rem; transition: background-color 0.2s, color 0.2s }
+      html[data-tema='dark'] body { background: #02050a; color: #f5f8fc }
       .container { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 1rem }
       .cabecalho-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; padding: .6rem 0 }
       .marca { font-weight: 700; color: #0b5e76; text-decoration: none; display: flex; align-items: center; gap: .4rem }
+      html[data-tema='dark'] .marca { color: #38bdf8 }
       .nav-principal { display: flex; flex-wrap: wrap; gap: .6rem; font-size: .92rem }
       .nav-principal a { color: #0b5e76; text-decoration: none }
+      html[data-tema='dark'] .nav-principal a { color: #d0dcec }
       .controles-sitio { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-left: auto }
       .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap }
       img { max-width: 100%; height: auto }

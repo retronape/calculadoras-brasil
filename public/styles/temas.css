@@ -180,6 +180,22 @@ h2 { font-size: 1.15rem; margin: 1.4rem 0 0.6rem }
 .anuncio-rotulo { display: block; margin-bottom: 0.2rem }
 .anuncio--resultado { margin-top: 1.2rem; min-height: 100px; background: var(--superficie); border: 1px solid var(--borda); border-radius: 8px; padding: 0.5rem }
 .anuncio--secundario { margin-top: 1.2rem; min-height: 60px; background: var(--superficie); border: 1px solid var(--borda); border-radius: 8px; padding: 0.4rem 0.5rem }
+.ad-container { margin: 1rem 0; min-height: 60px; display: flex; align-items: center; justify-content: center; background: var(--superficie2); border: 1px dashed var(--borda); border-radius: var(--raio); padding: 0.5rem; opacity: 0.7; transition: opacity 0.2s }
+.ad-container:hover { opacity: 1 }
+
+/* ── Dark mode specific overrides ────────────────────────── */
+html[data-tema='dark'] body { background: var(--fundo); color: var(--texto) }
+html[data-tema='dark'] .cabecalho { background: var(--superficie); border-bottom-color: var(--borda) }
+html[data-tema='dark'] .nav-principal a { color: var(--mutado-claro) }
+html[data-tema='dark'] .botao-tema { color: var(--mutado-claro) }
+html[data-tema='dark'] .botao-tema:hover { color: var(--texto) }
+
+/* ── Light mode specific overrides ───────────────────────── */
+html[data-tema='light'] body { background: var(--fundo); color: var(--texto) }
+html[data-tema='light'] .cabecalho { background: var(--superficie); border-bottom-color: var(--borda) }
+html[data-tema='light'] .nav-principal a { color: var(--mutado-claro) }
+html[data-tema='light'] .botao-tema { color: var(--mutado-claro) }
+html[data-tema='light'] .botao-tema:hover { color: var(--texto) }
 
 /* ── Layout responsivo: calculadora desktop ──────────────── */
 @media (min-width: 900px) {

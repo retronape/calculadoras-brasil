@@ -1,0 +1,54 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro'
+import CampoFormulario from '../componentes/CampoFormulario.astro'
+
+const { meta } = Astro.props
+---
+
+<CalculatorLayout meta={meta}>
+  <CampoFormulario nome="redacao" rotulo="Redação (0–1000)" tipo="number" min="0" max="1000" step="1" obrigatorio />
+  <CampoFormulario nome="linguagens" rotulo="Linguagens (0–1000)" tipo="number" min="0" max="1000" step="1" obrigatorio />
+  <CampoFormulario nome="humanas" rotulo="Ciências Humanas (0–1000)" tipo="number" min="0" max="1000" step="1" obrigatorio />
+  <CampoFormulario nome="natureza" rotulo="Ciências da Natureza (0–1000)" tipo="number" min="0" max="1000" step="1" obrigatorio />
+  <CampoFormulario nome="matematica" rotulo="Matemática (0–1000)" tipo="number" min="0" max="1000" step="1" obrigatorio />
+</CalculatorLayout>
+
+<script>
+  import { mostrarResultado, mostrarErro, linha, grupo } from '../lib/resultado.ts'
+
+  const form = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+
+      const fd = new FormData(form)
+      const redacao = parseFloat(fd.get('redacao') as string || '0')
+      const linguagens = parseFloat(fd.get('linguagens') as string || '0')
+      const humanas = parseFloat(fd.get('humanas') as string || '0')
+      const natureza = parseFloat(fd.get('natureza') as string || '0')
+      const matematica = parseFloat(fd.get('matematica') as string || '0')
+
+      if (redacao === 0 && linguagens === 0 && humanas === 0 && natureza === 0 && matematica === 0) {
+        mostrarErro('Preencha pelo menos uma nota.')
+        return
+      }
+
+      const media = (redacao + linguagens + humanas + natureza + matematica) / 5
+      const notaCorteMed = 750, notaCorteDir = 700, notaCorteEng = 680
+
+      const classificacao = media >= notaCorteMed ? 'Excelente' : media >= notaCorteDir ? 'Muito Bom' : media >= notaCorteEng ? 'Bom' : 'Regular'
+
+      mostrarResultado(
+        grupo('Sua Nota', [
+          linha('Média geral', media.toFixed(1)),
+          linha('Classificação', classificacao)
+        ]) +
+        grupo('Comparação com notas de corte (referência)', [
+          linha('Medicina (corte ~750)', (media / notaCorteMed * 100).toFixed(1) + '%'),
+          linha('Direito (corte ~700)', (media / notaCorteDir * 100).toFixed(1) + '%'),
+          linha('Engenharia (corte ~680)', (media / notaCorteEng * 100).toFixed(1) + '%')
+        ])
+      )
+    })
+  }
+</script>

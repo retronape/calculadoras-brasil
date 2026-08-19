@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+
+const dados = {
+  titulo: 'Plano de Estudos',
+  descricao: 'Organize seus horários de estudos e aumente sua produtividade.',
+  rota: '/utilidades/plano-estudos/'
+}
+---
+
+<BaseLayout titulo={dados.titulo} descricao={dados.descricao} rota={dados.rota}>
+  <article class="pagina-calculadora" data-categoria="estudos">
+    <div class="conteudo-principal">
+      <nav class="trilha">
+        <a href="/">Início</a>
+        <span aria-hidden="true"> / </span>
+        <a href="/utilidades/">Utilidades</a>
+        <span aria-hidden="true"> / </span>
+        <span aria-current="page">Plano de Estudos</span>
+      </nav>
+      
+      <h1>Plano de Estudos</h1>
+      <p class="subtitulo">Organize seus horários de estudos e aumente sua produtividade.</p>
+      
+      <div class="formulario">
+        <div class="campos">
+          <div class="campo">
+            <label for="horas-disponiveis">Horas disponíveis por dia</label>
+            <input type="number" id="horas-disponiveis" min="1" max="24" step="0.5" value="4" required>
+          </div>
+          <div class="campo">
+            <label for="materias">Matérias para estudar (separadas por vírgula)</label>
+            <input type="text" id="materias" placeholder="Ex: Matemática, Português, História" required>
+          </div>
+          <div class="campo">
+            <label for="prioridade">Foco principal</label>
+            <select id="prioridade">
+              <option value="igual">Distribuição igual</option>
+              <option value="dificuldade">Foco nas matérias mais difíceis</option>
+              <option value="prova">Foco na prova mais próxima</option>
+            </select>
+          </div>
+          <button type="button" class="botao" id="gerar-plano-btn">Gerar Plano</button>
+        </div>
+      </div>
+      
+      <section id="resultado" class="resultado" aria-live="polite">
+        <h2 class="resultado-titulo">Seu Plano de Estudos</h2>
+        <div class="resultado-conteudo">
+          <div class="resultado-grupo">
+            <div class="resultado-grupo-titulo">Distribuição Semanal</div>
+            <div id="plano-estudos"></div>
+          </div>
+          <div class="resultado-grupo">
+            <div class="resultado-grupo-titulo">Dicas de Estudo</div>
+            <ul id="dicas-estudo">
+              <li>Estude em blocos de 25-50 minutos (técnica Pomodoro)</li>
+              <li>Faça pausas curtas a cada bloco de estudo</li>
+              <li>Revise o conteúdo nas primeiras 24 horas após estudar</li>
+              <li>Use mapas mentais para organizar informações</li>
+              <li>Pratique com exercícios e simulados</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      
+      <section class="explicacao">
+        <h2>Como funciona</h2>
+        <p>O plano de estudos ajuda a organizar o tempo e aumentar a eficiência do aprendizado.</p>
+        <p>A técnica Pomodoro sugere estudar em blocos de 25 minutos com pausas de 5 minutos.</p>
+        <p>É recomendável revisar o conteúdo estudado nas primeiras 24 horas para melhor fixação.</p>
+      </section>
+    </div>
+    
+    <aside class="lateral">
+      <div class="ad-container" data-ad-posicao="secundario">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="0000000000" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      </div>
+    </aside>
+  </article>
+</BaseLayout>
+
+<script>
+  function el(id: string): HTMLInputElement | null { return document.getElementById(id) as HTMLInputElement | null }
+
+  document.getElementById('gerar-plano-btn')?.addEventListener('click', () => {
+    const horasDisponiveis = parseFloat(el('horas-disponiveis')?.value || '4')
+    const materiasInput = el('materias')?.value || ''
+    const prioridade = el('prioridade')?.value || 'igual'
+    
+    const materias = materiasInput.split(',').map((m: string) => m.trim()).filter((m: string) => m.length > 0)
+    if (materias.length === 0) { alert('Por favor, insira pelo menos uma matéria.'); return }
+    
+    const distribuicao: Record<string, number> = {}
+    
+    if (prioridade === 'igual') {
+      const h = horasDisponiveis / materias.length
+      materias.forEach((m: string) => { distribuicao[m] = h })
+    } else if (prioridade === 'dificuldade') {
+      const diffs = materias.map(() => Math.random())
+      const total = diffs.reduce((a: number, b: number) => a + b, 0)
+      materias.forEach((m: string, i: number) => { distribuicao[m] = (diffs[i] / total) * horasDisponiveis })
+    } else {
+      const base = horasDisponiveis / materias.length
+      materias.forEach((m: string, i: number) => { distribuicao[m] = base * (1 + (materias.length - i) * 0.1) })
+    }
+    
+    const html = Object.entries(distribuicao).map(([m, h]) => `
+      <div class="resultado-linha"><span>${m}</span><strong>${h.toFixed(1)}h/dia</strong></div>
+    `).join('')
+    
+    const target = document.getElementById('plano-estudos')
+    if (target) target.innerHTML = html
+    const res = document.getElementById('resultado'); if (res) res.style.display = 'block'
+  })
+</script>

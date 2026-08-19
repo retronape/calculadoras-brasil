@@ -15,6 +15,9 @@ import Inflacao from '../../calculadoras/inflacao.astro'
 import Financiamento from '../../calculadoras/financiamento.astro'
 import CartaoCredito from '../../calculadoras/cartao-credito.astro'
 import Iof from '../../calculadoras/iof.astro'
+import Poupanca from '../../calculadoras/poupanca.astro'
+import SimuladorEnem from '../../calculadoras/simulador-enem.astro'
+import BolsaEstudos from '../../calculadoras/bolsa-estudos.astro'
 
 export function getStaticPaths() {
   return calculadoras.map(function (c) {
@@ -40,3 +43,6 @@ const { meta } = Astro.props
 {meta.slug === 'financiamento' && <Financiamento meta={meta} />}
 {meta.slug === 'cartao-credito' && <CartaoCredito meta={meta} />}
 {meta.slug === 'iof' && <Iof meta={meta} />}
+{meta.slug === 'poupanca' && <Poupanca meta={meta} />}
+{meta.slug === 'simulador-enem' && <SimuladorEnem meta={meta} />}
+{meta.slug === 'bolsa-estudos' && <BolsaEstudos meta={meta} />}

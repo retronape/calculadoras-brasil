@@ -14,6 +14,8 @@ import Financiamento from './financiamento.astro'
 import CartaoCredito from './cartao-credito.astro'
 import Iof from './iof.astro'
 import Poupanca from './poupanca.astro'
+import SimuladorEnem from './simulador-enem.astro'
+import BolsaEstudos from './bolsa-estudos.astro'
 
 export interface MetaCalculadora {
   slug: string
@@ -311,6 +313,40 @@ export const calculadoras: CalculadoraRegistrada[] = [
         'A poupança rende 70% da Selic quando a Selic está ≤ 8,5% ao ano.',
         'Quando a Selic supera 8,5%, a poupança rende apenas 0,5% ao mês (6,17% a.a.).',
         'Compare com o CDI: geralmente o CDB paga mais que a poupança.'
+      ]
+    }
+  },
+  {
+    slug: 'simulador-enem',
+    Componente: SimuladorEnem,
+    meta: {
+      slug: 'simulador-enem',
+      titulo: 'Simulador ENEM',
+      descricao: 'Simule sua nota no ENEM e veja a chance de passar no curso desejado.',
+      seo: 'Simulador ENEM: calcule sua nota e compare com notas de corte de universidades.',
+      precisaTabelas: false,
+      categoria: 'estudos',
+      explicacao: [
+        'A nota do ENEM é calculada pela média ponderada das cinco áreas.',
+        'Esta simulação usa pesos padrão para fins educacionais.',
+        'Para cálculos oficiais, consulte o edital do vestibular desejado.'
+      ]
+    }
+  },
+  {
+    slug: 'bolsa-estudos',
+    Componente: BolsaEstudos,
+    meta: {
+      slug: 'bolsa-estudos',
+      titulo: 'Bolsa de Estudos',
+      descricao: 'Calcule o valor da bolsa de estudos com base na sua renda familiar.',
+      seo: 'Calculadora de bolsa de estudos: simule o valor com base na renda familiar.',
+      precisaTabelas: false,
+      categoria: 'estudos',
+      explicacao: [
+        'O valor da bolsa é calculado com base na renda familiar per capita.',
+        'Esta é uma simulação educacional.',
+        'Programas como ProUni e Sisu possuem critérios específicos.'
       ]
     }
   }

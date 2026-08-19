@@ -1,0 +1,164 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+
+const dados = {
+  titulo: 'Tracker de Estudos',
+  descricao: 'Acompanhe seu progresso nos estudos e mantenha a consistência.',
+  rota: '/utilidades/tracker-estudos/'
+}
+---
+
+<BaseLayout titulo={dados.titulo} descricao={dados.descricao} rota={dados.rota}>
+  <article class="pagina-calculadora" data-categoria="estudos">
+    <div class="conteudo-principal">
+      <nav class="trilha">
+        <a href="/">Início</a>
+        <span aria-hidden="true"> / </span>
+        <a href="/utilidades/">Utilidades</a>
+        <span aria-hidden="true"> / </span>
+        <span aria-current="page">Tracker de Estudos</span>
+      </nav>
+      
+      <h1>Tracker de Estudos</h1>
+      <p class="subtitulo">Acompanhe seu progresso nos estudos e mantenha a consistência.</p>
+      
+      <div class="formulario">
+        <div class="campos">
+          <div class="campo">
+            <label for="materia">Matéria</label>
+            <input type="text" id="materia" placeholder="Ex: Matemática" required>
+          </div>
+          
+          <div class="campo">
+            <label for="topicos">Tópicos estudados (separados por vírgula)</label>
+            <input type="text" id="topicos" placeholder="Ex: Equações do 2º grau, Funções" required>
+          </div>
+          
+          <div class="campo">
+            <label for="horas-estudadas">Horas estudadas</label>
+            <input type="number" id="horas-estudadas" min="0.5" max="24" step="0.5" value="1" required>
+          </div>
+          
+          <div class="campo">
+            <label for="data-estudo">Data do estudo</label>
+            <input type="date" id="data-estudo" required>
+          </div>
+          
+          <button type="button" class="botao" id="registrar-btn">Registrar Estudo</button>
+        </div>
+      </div>
+      
+      <section id="resultado" class="resultado" aria-live="polite">
+        <h2 class="resultado-titulo">Histórico de Estudos</h2>
+        <div class="resultado-conteudo">
+          <div class="resultado-grupo">
+            <div class="resultado-grupo-titulo">Resumo</div>
+            <div class="resultado-linha">
+              <span>Total de Horas Estudadas</span>
+              <strong id="total-horas">0h</strong>
+            </div>
+            <div class="resultado-linha">
+              <span>Total de Sessões</span>
+              <strong id="total-sessoes">0</strong>
+            </div>
+            <div class="resultado-linha">
+              <span>Média por Sessão</span>
+              <strong id="media-sessao">0h</strong>
+            </div>
+          </div>
+          
+          <div class="resultado-grupo">
+            <div class="resultado-grupo-titulo">Últimas Sessões</div>
+            <div id="historico-estudos">
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section class="explicacao">
+        <h2>Como funciona</h2>
+        <p>O tracker de estudos ajuda a manter a consistência e acompanhar o progresso ao longo do tempo.</p>
+        <p>Registre suas sessões de estudo regularmente para ter uma visão clara do seu desempenho.</p>
+        <p>Estudos mostram que a consistência é mais importante que a intensidade para o aprendizado eficaz.</p>
+      </section>
+    </div>
+    
+    <aside class="lateral">
+      <div class="ad-container" data-ad-posicao="secundario">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="0000000000" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      </div>
+    </aside>
+  </article>
+</BaseLayout>
+
+<script>
+  interface SessaoEstudo {
+    materia: string
+    topicos: string[]
+    horas: number
+    data: string
+    timestamp: number
+  }
+
+  let historico: SessaoEstudo[] = JSON.parse(localStorage.getItem('cb:historico-estudos') || '[]') as SessaoEstudo[]
+  
+  function el(id: string): HTMLInputElement | null { return document.getElementById(id) as HTMLInputElement | null }
+  
+  function atualizarInterface() {
+    const totalHoras = historico.reduce((acc: number, s: SessaoEstudo) => acc + s.horas, 0)
+    const totalSessoes = historico.length
+    const mediaSessao = totalSessoes > 0 ? totalHoras / totalSessoes : 0
+    
+    const th = el('total-horas')
+    const ts = el('total-sessoes')
+    const ms = el('media-sessao')
+    if (th) th.textContent = `${totalHoras.toFixed(1)}h`
+    if (ts) ts.textContent = totalSessoes.toString()
+    if (ms) ms.textContent = `${mediaSessao.toFixed(1)}h`
+    
+    const historicoHTML = historico.slice(-5).reverse().map((s: SessaoEstudo) => `
+      <div class="resultado-linha">
+        <span>${s.materia} - ${new Date(s.data).toLocaleDateString('pt-BR')}</span>
+        <strong>${s.horas}h</strong>
+      </div>
+    `).join('')
+    
+    const he = el('historico-estudos')
+    if (he) he.innerHTML = historicoHTML || '<p>Nenhuma sessão registrada ainda.</p>'
+  }
+  
+  function registrarEstudo() {
+    const materia = el('materia')?.value || ''
+    const topicos = el('topicos')?.value || ''
+    const horas = parseFloat(el('horas-estudadas')?.value || '1')
+    const data = el('data-estudo')?.value || new Date().toISOString().split('T')[0]
+    
+    if (!materia || !topicos) {
+      alert('Por favor, preencha todos os campos.')
+      return
+    }
+    
+    const novaSessao: SessaoEstudo = {
+      materia,
+      topicos: topicos.split(',').map((t: string) => t.trim()),
+      horas,
+      data,
+      timestamp: Date.now()
+    }
+    
+    historico.push(novaSessao)
+    localStorage.setItem('cb:historico-estudos', JSON.stringify(historico))
+    
+    const m = el('materia'); if (m) m.value = ''
+    const tp = el('topicos'); if (tp) tp.value = ''
+    const h = el('horas-estudadas'); if (h) h.value = '1'
+    const d = el('data-estudo'); if (d) d.value = new Date().toISOString().split('T')[0]
+    
+    atualizarInterface()
+  }
+  
+  const de = el('data-estudo'); if (de) de.value = new Date().toISOString().split('T')[0]
+  atualizarInterface()
+  
+  el('registrar-btn')?.addEventListener('click', registrarEstudo)
+</script>
