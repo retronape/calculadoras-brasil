@@ -183,19 +183,51 @@ h2 { font-size: 1.15rem; margin: 1.4rem 0 0.6rem }
 .ad-container { margin: 1rem 0; min-height: 60px; display: flex; align-items: center; justify-content: center; background: var(--superficie2); border: 1px dashed var(--borda); border-radius: var(--raio); padding: 0.5rem; opacity: 0.7; transition: opacity 0.2s }
 .ad-container:hover { opacity: 1 }
 
-/* ── Dark mode specific overrides ────────────────────────── */
-html[data-tema='dark'] body { background: var(--fundo); color: var(--texto) }
-html[data-tema='dark'] .cabecalho { background: var(--superficie); border-bottom-color: var(--borda) }
-html[data-tema='dark'] .nav-principal a { color: var(--mutado-claro) }
-html[data-tema='dark'] .botao-tema { color: var(--mutado-claro) }
-html[data-tema='dark'] .botao-tema:hover { color: var(--texto) }
+/* ── Modo Padrão: base limpa, sem sombras extras ─────────── */
+[data-modo='padrao'] .cartao { box-shadow: none; border-color: var(--borda) }
+[data-modo='padrao'] .cartao:hover { box-shadow: none; transform: none }
+[data-modo='padrao'] .formulario { box-shadow: none }
+[data-modo='padrao'] .resultado { box-shadow: none }
+[data-modo='padrao'] .rodape { margin-top: 2rem }
+[data-modo='padrao'] .hero p { font-size: 0.95rem }
 
-/* ── Light mode specific overrides ───────────────────────── */
-html[data-tema='light'] body { background: var(--fundo); color: var(--texto) }
-html[data-tema='light'] .cabecalho { background: var(--superficie); border-bottom-color: var(--borda) }
-html[data-tema='light'] .nav-principal a { color: var(--mutado-claro) }
-html[data-tema='light'] .botao-tema { color: var(--mutado-claro) }
-html[data-tema='light'] .botao-tema:hover { color: var(--texto) }
+/* ── Modo Rico: sombras suaves, hover com elevação ───────── */
+[data-modo='rico'] .cartao { box-shadow: var(--sombra); transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease }
+[data-modo='rico'] .cartao:hover { transform: translateY(-4px); box-shadow: var(--sombra-media); border-color: var(--acento, var(--primaria)) }
+[data-modo='rico'] .formulario { box-shadow: var(--sombra) }
+[data-modo='rico'] .resultado { box-shadow: var(--sombra) }
+[data-modo='rico'] .campo-controle:focus-within { box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.22) }
+[data-modo='rico'] .botao { transition: filter 0.2s ease, transform 0.15s ease }
+[data-modo='rico'] .botao:hover { filter: brightness(1.1); transform: translateY(-1px) }
+[data-modo='rico'] .diagnostico { box-shadow: var(--sombra) }
+[data-modo='rico'] .conteudo-longo { box-shadow: var(--sombra) }
+[data-modo='rico'] .ad-container { border-style: solid; opacity: 0.85 }
+
+/* ── Modo Máximo: tudo rico + animações, gradientes, microinterações ── */
+[data-modo='maximo'] .cartao { box-shadow: var(--sombra-media); transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease }
+[data-modo='maximo'] .cartao:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 14px 36px rgba(0,0,0,0.35); border-color: var(--acento, var(--primaria)) }
+[data-modo='maximo'] .formulario { box-shadow: var(--sombra-media) }
+[data-modo='maximo'] .resultado { box-shadow: var(--sombra-media) }
+[data-modo='maximo'] .campo-controle:focus-within { box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.3) }
+[data-modo='maximo'] .botao { transition: filter 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease }
+[data-modo='maximo'] .botao:hover { filter: brightness(1.15); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(14, 165, 233, 0.35) }
+[data-modo='maximo'] .botao:active { transform: translateY(0); filter: brightness(0.95) }
+[data-modo='maximo'] .cabecalho { box-shadow: var(--sombra) }
+[data-modo='maximo'] .diagnostico { box-shadow: var(--sombra-media) }
+[data-modo='maximo'] .conteudo-longo { box-shadow: var(--sombra-media) }
+[data-modo='maximo'] .consentimento { box-shadow: var(--sombra-media) }
+[data-modo='maximo'] .ad-container { border-style: solid; opacity: 1 }
+[data-modo='maximo'] .ad-container:hover { transform: scale(1.005) }
+[data-modo='maximo'] .hero h1 { background: var(--gradiente-hero); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text }
+[data-modo='maximo'] .resultado-linha.destaque { text-shadow: 0 0 20px rgba(56, 189, 248, 0.2) }
+
+/* ── Ad spaces adicionais ────────────────────────────────── */
+.ad-interno { margin: 1.5rem 0; min-height: 60px; display: flex; align-items: center; justify-content: center; background: var(--superficie2); border: 1px dashed var(--borda); border-radius: var(--raio); padding: 0.5rem; opacity: 0.7; transition: opacity 0.2s; font-size: 0.7rem; color: var(--mutado-claro) }
+.ad-interno:hover { opacity: 1 }
+.ad-inline { margin: 1rem 0; min-height: 50px; display: flex; align-items: center; justify-content: center; background: var(--superficie2); border: 1px dashed var(--borda); border-radius: var(--raio); padding: 0.4rem; opacity: 0.6; transition: opacity 0.2s }
+.ad-inline:hover { opacity: 1 }
+.ad-rodape-pagina { margin: 2rem 0 1rem; min-height: 80px; display: flex; align-items: center; justify-content: center; background: var(--superficie2); border: 1px dashed var(--borda); border-radius: var(--raio); padding: 0.5rem; opacity: 0.6; transition: opacity 0.2s }
+.ad-rodape-pagina:hover { opacity: 1 }
 
 /* ── Layout responsivo: calculadora desktop ──────────────── */
 @media (min-width: 900px) {

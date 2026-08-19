@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import AdSlot from '../../componentes/AdSlot.astro'
 
 const utilidades = [
   { slug: 'calendario-clt', titulo: 'Calendário CLT', descricao: 'Veja seus próximos direitos: 13º, férias, feriados.', icone: '📅', categoria: 'trabalho' },
@@ -38,6 +39,8 @@ const utilidades = [
       </li>
     ))}
   </ul>
+
+  <AdSlot posicao="interno" />
 
   <section class="explicacao">
     <h2>Sobre</h2>

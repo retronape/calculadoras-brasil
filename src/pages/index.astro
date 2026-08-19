@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import AdSlot from '../componentes/AdSlot.astro'
 import { calculadoras, rotulosCategoria } from '../calculadoras/registry.ts'
 import { siteConfig } from '../config/site.ts'
 
@@ -20,6 +21,8 @@ function iconeCategoria(cat: string): string {
     <h1>BrasilCalcula</h1>
     <p class="subtitulo">{siteConfig.tagline}</p>
   </section>
+
+  <AdSlot posicao="resultado" />
 
   <h2>Calculadoras</h2>
   <ul class="grade-calculadoras">

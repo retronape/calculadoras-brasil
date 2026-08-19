@@ -64,7 +64,13 @@ const tituloPagina = titulo.includes(siteConfig.nome) ? titulo : titulo + ' · '
     <script is:inline>
       ;(function () {
         var d = document.documentElement
-        function pegar(c) { try { return window.localStorage.getItem('cb:' + c) } catch (e) { return null } }
+        function pegar(c) {
+          try {
+            var v = window.localStorage.getItem('cb:' + c)
+            if (v === null) return null
+            try { return JSON.parse(v) } catch (e) { return v }
+          } catch (e) { return null }
+        }
 
         // Tema (padrão: escuro)
         var tema = pegar('tema')

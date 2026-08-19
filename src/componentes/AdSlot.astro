@@ -2,23 +2,31 @@
 import { siteConfig } from '../config/site.ts'
 
 export interface Props {
-  posicao: 'resultado' | 'secundario'
+  posicao: 'resultado' | 'secundario' | 'interno' | 'inline' | 'rodape-pagina'
 }
 
 const { posicao } = Astro.props
 
-const slot = posicao === 'resultado' ? siteConfig.adsense.slotResultado : siteConfig.adsense.slotSecundario
-const formato = posicao === 'resultado' ? 'auto' : 'auto'
+const slotMap: Record<string, string> = {
+  resultado: siteConfig.adsense.slotResultado,
+  secundario: siteConfig.adsense.slotSecundario,
+  interno: siteConfig.adsense.slotResultado,
+  inline: siteConfig.adsense.slotSecundario,
+  'rodape-pagina': siteConfig.adsense.slotResultado
+}
+
+const slot = slotMap[posicao] || siteConfig.adsense.slotResultado
+const classe = posicao === 'interno' ? 'ad-interno' : posicao === 'inline' ? 'ad-inline' : posicao === 'rodape-pagina' ? 'ad-rodape-pagina' : 'ad-container'
 ---
 
 {siteConfig.adsense.habilitado && (
-  <div class="ad-container" data-ad-posicao={posicao}>
+  <div class={classe} data-ad-posicao={posicao}>
     <ins
       class="adsbygoogle"
       style="display:block"
       data-ad-client={siteConfig.adsense.clientId}
       data-ad-slot={slot}
-      data-ad-format={formato}
+      data-ad-format="auto"
       data-full-width-responsive="true"
     ></ins>
   </div>
@@ -40,7 +48,7 @@ const formato = posicao === 'resultado' ? 'auto' : 'auto'
   function inicializar() {
     if (!podeCarregarAnuncios()) return
 
-    const containers = document.querySelectorAll<HTMLElement>('.ad-container[data-ad-posicao]')
+    const containers = document.querySelectorAll<HTMLElement>('[data-ad-posicao]')
     containers.forEach((container) => {
       try {
         const ins = container.querySelector('ins.adsbygoogle')
@@ -48,9 +56,7 @@ const formato = posicao === 'resultado' ? 'auto' : 'auto'
           ;(window as any).adsbygoogle = (window as any).adsbygoogle || []
           ;(window as any).adsbygoogle.push({})
         }
-      } catch {
-        // AdSense not loaded
-      }
+      } catch {}
     })
   }
 
