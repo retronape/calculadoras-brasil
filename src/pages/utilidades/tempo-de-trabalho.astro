@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+---
+<BaseLayout titulo="Tempo de Trabalho" descricao="Calcule quantas horas custa um produto" rota="/utilidades/tempo-de-trabalho/">
+  <nav class="trilha"><a href="/">Início</a> / <a href="/utilidades/">Utilidades</a> / <span>Tempo de Trabalho</span></nav>
+  <h1>Tempo de Trabalho</h1>
+  <p class="subtitulo">Descubra quanto tempo você precisa trabalhar para comprar algo.</p>
+  
+  <form id="form-calculadora" class="formulario" novalidate>
+    <div class="campos">
+      <label class="campo">
+        Custo do Produto (R$):
+        <input type="number" name="custo" step="0.01" required />
+      </label>
+      <label class="campo">
+        Salário Mensal (R$):
+        <input type="number" name="salario" step="0.01" required />
+      </label>
+    </div>
+    <button type="submit" class="botao">Calcular</button>
+  </form>
+  
+  <section id="resultado" class="resultado" aria-live="polite" hidden>
+    <h2 class="resultado-titulo">Resultado</h2>
+    <div class="resultado-conteudo"></div>
+    <p class="resultado-nota">Baseado em carga de 220 horas mensais.</p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { linha, grupo, mostrarResultado } from '../../lib/resultado.ts'
+  
+  const form = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const custo = parseFloat((form.elements.namedItem('custo') as HTMLInputElement).value)
+      const salario = parseFloat((form.elements.namedItem('salario') as HTMLInputElement).value)
+      
+      const valorHora = salario / 220
+      const horasNecessarias = custo / valorHora
+      
+      let html = grupo('Esforço Necessário', [
+        linha('Horas de trabalho', horasNecessarias.toFixed(1)),
+        linha('Dias de trabalho', (horasNecessarias / 8).toFixed(1))
+      ])
+      mostrarResultado(html)
+    })
+  }
+</script>

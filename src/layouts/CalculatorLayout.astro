@@ -1,0 +1,63 @@
+---
+import BaseLayout from './BaseLayout.astro'
+import DataFreshness from '../componentes/DataFreshness.astro'
+import AdSlot from '../componentes/AdSlot.astro'
+import ResultNotice from '../componentes/ResultNotice.astro'
+import { siteConfig } from '../config/site.ts'
+
+interface MetaCalculadora {
+  slug: string
+  titulo: string
+  descricao: string
+  seo: string
+  precisaTabelas: boolean
+  categoria: string
+  aviso?: string
+  explicacao: string[]
+}
+
+interface Props {
+  meta: MetaCalculadora
+}
+
+const { meta } = Astro.props
+---
+
+<BaseLayout titulo={meta.titulo} descricao={meta.seo} rota={'/calculadora/' + meta.slug + '/'}>
+  <article class="pagina-calculadora" data-categoria={meta.categoria}>
+    <div class="conteudo-principal">
+      <nav class="trilha">
+        <a href="/">Início</a>
+        <span aria-hidden="true"> / </span>
+        <span aria-current="page">{meta.titulo}</span>
+      </nav>
+      {meta.precisaTabelas && <DataFreshness />}
+      <h1>{meta.titulo}</h1>
+      <p class="subtitulo">{meta.descricao}</p>
+
+      <form id="form-calculadora" class="formulario" data-calculadora={meta.slug} novalidate>
+        <div class="campos">
+          <slot />
+        </div>
+        <button type="submit" class="botao">Calcular</button>
+      </form>
+
+      <section id="resultado" class="resultado" aria-live="polite" hidden>
+        <h2 class="resultado-titulo">Resultado</h2>
+        <div class="resultado-conteudo"></div>
+        <ResultNotice extra={meta.aviso} />
+      </section>
+
+      <AdSlot posicao="resultado" />
+    </div>
+
+    <aside class="lateral">
+      <AdSlot posicao="secundario" />
+    </aside>
+  </article>
+
+  <section class="explicacao">
+    <h2>Como funciona</h2>
+    {meta.explicacao.map((p) => <p>{p}</p>)}
+  </section>
+</BaseLayout>

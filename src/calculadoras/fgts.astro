@@ -1,0 +1,50 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro'
+import CampoFormulario from '../componentes/CampoFormulario.astro'
+import { tabelas } from '../lib/tabelas.ts'
+
+const { meta } = Astro.props
+---
+
+<CalculatorLayout meta={meta}>
+  <CampoFormulario nome="salario" rotulo="Salário Mensal (R$)" tipo="number" prefixo="R$" min="0" step="0.01" inputmode="decimal" obrigatorio />
+  <CampoFormulario nome="saldoInicial" rotulo="Saldo Inicial no FGTS (R$)" tipo="number" prefixo="R$" min="0" step="0.01" valor="0" />
+  <CampoFormulario nome="meses" rotulo="Número de meses" tipo="number" min="1" valor="12" />
+</CalculatorLayout>
+
+<script>
+  import { fgtsSaldo, multaFgts } from '../lib/tributos.ts'
+  import { tabelas } from '../lib/tabelas.ts'
+  import { moeda, parseNumero, percentual } from '../lib/format.ts'
+  import { mostrarResultado, mostrarErro, linha, grupo, campoValor } from '../lib/resultado.ts'
+
+  const formulario = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (formulario) {
+    formulario.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const salario = parseNumero(campoValor(formulario, 'salario'))
+      const saldoInicial = parseNumero(campoValor(formulario, 'saldoInicial') || '0')
+      const meses = parseInt(campoValor(formulario, 'meses') || '12')
+
+      if (!salario || salario <= 0) {
+        mostrarErro('Informe o salário mensal.')
+        return
+      }
+
+      const resultado = fgtsSaldo({ salario, meses, saldoInicial, t: tabelas })
+      const multa = multaFgts(resultado.saldo, tabelas)
+
+      mostrarResultado(
+        grupo('Projeção FGTS', [
+          linha('Depósito Mensal', moeda(resultado.depositoMensal)),
+          linha('Total Depositado', moeda(resultado.totalDepositado)),
+          linha('Juros Acumulados', moeda(resultado.juros)),
+          linha('Saldo Final', moeda(resultado.saldo), 'destaque')
+        ]) +
+        grupo('Multa Rescisória', [
+          linha('Multa 40% (sem justa causa)', moeda(multa))
+        ])
+      )
+    })
+  }
+</script>

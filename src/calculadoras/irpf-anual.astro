@@ -1,0 +1,63 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro'
+import CampoFormulario from '../componentes/CampoFormulario.astro'
+import { tabelas } from '../lib/tabelas.ts'
+
+const { meta } = Astro.props
+---
+
+<CalculatorLayout meta={meta}>
+  <CampoFormulario nome="rendimentos" rotulo="Rendimentos Tributáveis Anuais (R$)" tipo="number" prefixo="R$" min="0" step="0.01" inputmode="decimal" obrigatorio />
+  <CampoFormulario nome="dependentes" rotulo="Número de dependentes" tipo="number" min="0" valor="0" />
+  <CampoFormulario nome="educacao" rotulo="Despesas com Educação (R$)" tipo="number" prefixo="R$" min="0" step="0.01" valor="0" />
+  <CampoFormulario nome="saude" rotulo="Despesas com Saúde (R$)" tipo="number" prefixo="R$" min="0" step="0.01" valor="0" />
+  <CampoFormulario nome="previdencia" rotulo="Previdência Privada/PGBL (R$)" tipo="number" prefixo="R$" min="0" step="0.01" valor="0" />
+  <CampoFormulario nome="irrfRetido" rotulo="IRRF já retido na fonte (R$)" tipo="number" prefixo="R$" min="0" step="0.01" valor="0" />
+</CalculatorLayout>
+
+<script>
+  import { irpfCompleta, irpfSimplificada } from '../lib/tributos.ts'
+  import { tabelas } from '../lib/tabelas.ts'
+  import { moeda, parseNumero, percentual } from '../lib/format.ts'
+  import { mostrarResultado, mostrarErro, linha, grupo, campoValor } from '../lib/resultado.ts'
+
+  const formulario = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (formulario) {
+    formulario.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const rendimentos = parseNumero(campoValor(formulario, 'rendimentos'))
+      const dependentes = parseInt(campoValor(formulario, 'dependentes') || '0')
+      const educacao = parseNumero(campoValor(formulario, 'educacao') || '0')
+      const saude = parseNumero(campoValor(formulario, 'saude') || '0')
+      const previdencia = parseNumero(campoValor(formulario, 'previdencia') || '0')
+      const irrfRetido = parseNumero(campoValor(formulario, 'irrfRetido') || '0')
+
+      if (!rendimentos || rendimentos <= 0) {
+        mostrarErro('Informe os rendimentos tributáveis anuais.')
+        return
+      }
+
+      const completa = irpfCompleta(rendimentos, { dependentes, educacao, saude, previdencia }, tabelas)
+      const simplificada = irpfSimplificada(rendimentos, tabelas)
+
+      const usarModelo = completa.devido <= simplificada.devido ? completa : simplificada
+      const impostoDevido = usarModelo.devido - irrfRetido
+
+      mostrarResultado(
+        grupo('Comparação de Modelos', [
+          linha('Modelo Completo — IRPF', moeda(completa.devido)),
+          linha('Modelo Simplificado — IRPF', moeda(simplificada.devido))
+        ]) +
+        grupo('Resultado (' + usarModelo.modelo + ')', [
+          linha('Base de Cálculo', moeda(usarModelo.base)),
+          linha('Dedução', moeda(usarModelo.deducao)),
+          linha('Imposto Bruto', moeda(usarModelo.imposto)),
+          linha('Redução', moeda(usarModelo.reducao)),
+          linha('IRPF Devido', moeda(usarModelo.devido)),
+          linha('IRRF Retido na Fonte', moeda(irrfRetido)),
+          linha(impostoDevido > 0 ? 'Valor a Pagar' : 'Valor a Restituir', moeda(Math.abs(impostoDevido)), 'total')
+        ])
+      )
+    })
+  }
+</script>

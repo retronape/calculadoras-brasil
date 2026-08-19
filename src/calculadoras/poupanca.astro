@@ -1,0 +1,99 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro'
+import CampoFormulario from '../componentes/CampoFormulario.astro'
+import { tabelas } from '../lib/tabelas.ts'
+
+const { meta } = Astro.props
+---
+
+<CalculatorLayout meta={meta}>
+  <CampoFormulario nome="valor" rotulo="Valor depositado (R$)" tipo="number" prefixo="R$" min="0" step="0.01" inputmode="decimal" obrigatorio />
+  <CampoFormulario nome="meses" rotulo="Prazo (meses)" tipo="number" min="1" max="600" valor="12" />
+  <CampoFormulario nome="aporte" rotulo="Aporte mensal (R$)" tipo="number" prefixo="R$" min="0" step="0.01" valor="0" />
+</CalculatorLayout>
+
+<div id="selic-ao-vivo" style="font-size:0.82rem;color:var(--mutado);margin-top:0.5rem;"></div>
+
+<script>
+  import { tabelas } from '../lib/tabelas.ts'
+  import { moeda, parseNumero, percentual } from '../lib/format.ts'
+  import { mostrarResultado, mostrarErro, linha, grupo, campoValor } from '../lib/resultado.ts'
+  import { obterDadosComBackground } from '../lib/tempo-real.ts'
+
+  // Busca Selic em tempo real
+  obterDadosComBackground().then((dados) => {
+    if (!dados) return
+    const statusEl = document.getElementById('selic-ao-vivo')
+    if (statusEl) {
+      const fonte = dados.selic.fonte === 'api' ? 'ao vivo do BCB' : 'fallback'
+      const selicAnual = dados.selic.valor
+      const aboveLimite = selicAnual > 8.5
+      statusEl.innerHTML = '📡 Selic: ' + selicAnual.toFixed(2) + '% a.a. → Poupança rende ' +
+        (aboveLimite ? '0,50% a.m. (fixo)' : '70% da Selic = ' + (selicAnual * 0.7 / 12).toFixed(2) + '% a.m.') +
+        ' · Fonte: ' + fonte
+      statusEl.style.color = dados.todosAoVivo ? 'var(--verde)' : 'var(--amber)'
+    }
+  }).catch(() => {})
+
+  const form = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const valor = parseNumero(campoValor(form, 'valor'))
+      const meses = parseInt(campoValor(form, 'meses') || '12')
+      const aporte = parseNumero(campoValor(form, 'aporte') || '0')
+
+      if (!valor || valor <= 0) {
+        mostrarErro('Informe o valor depositado.')
+        return
+      }
+
+      const t = tabelas.poupanca
+      // Usa Selic do cache se disponível, senão fallback
+      let selicAnual = t.selicLimite - 0.01 // fallback: abaixo do limite
+      try {
+        const cache = JSON.parse(localStorage.getItem('cb:dados-tempo-real') || '{}')
+        if (cache?.selic?.valor) selicAnual = cache.selic.valor
+      } catch {}
+
+      // Regra poupança: se Selic > 8,5% → 0,5% a.m., senão → 70% da Selic anual / 12
+      const taxaMensal = selicAnual > t.selicLimite
+        ? t.taxaQuandoAcima / 100
+        : (selicAnual * (t.percentualQuandoAbaixo / 100)) / 12
+
+      let saldo = Math.max(valor, 0)
+      let totalDepositado = saldo
+      const hist: { mes: number; saldo: number }[] = [{ mes: 0, saldo }]
+
+      for (let m = 0; m < meses; m++) {
+        saldo = saldo * (1 + taxaMensal) + Math.max(aporte, 0)
+        totalDepositado += Math.max(aporte, 0)
+        if (m < 12 || m === meses - 1 || m % 12 === 11) {
+          hist.push({ mes: m + 1, saldo })
+        }
+      }
+
+      const rendimento = saldo - totalDepositado
+      const rendimentoPercentual = totalDepositado > 0 ? (rendimento / totalDepositado) * 100 : 0
+      const selicAnualPct = selicAnual * 100
+      const acimaDoLimite = selicAnualPct > 8.5
+      const regra = acimaDoLimite
+        ? 'Selic (' + selicAnualPct.toFixed(1) + '%) > 8,5% → rende 0,50% a.m.'
+        : 'Selic (' + selicAnualPct.toFixed(1) + '%) ≤ 8,5% → rende 70% da Selic'
+
+      mostrarResultado(
+        grupo('Resultado Poupança', [
+          linha('Valor depositado', moeda(totalDepositado)),
+          linha('Saldo final', moeda(saldo), 'total'),
+          linha('Rendimento bruto', moeda(rendimento)),
+          linha('Rentabilidade', percentual(rendimentoPercentual))
+        ]) +
+        grupo('Taxa aplicada', [
+          linha('Regra', regra),
+          linha('Taxa mensal', percentual(taxaMensal * 100)),
+          linha('Taxa anual equivalente', percentual(Math.pow(1 + taxaMensal, 12) - 1))
+        ])
+      )
+    })
+  }
+</script>

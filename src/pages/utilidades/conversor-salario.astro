@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+---
+<BaseLayout titulo="Conversor de Salário" descricao="Converta seu salário mensal para valores horários e diários" rota="/utilidades/conversor-salario/">
+  <nav class="trilha"><a href="/">Início</a> / <a href="/utilidades/">Utilidades</a> / <span>Conversor de Salário</span></nav>
+  <h1>Conversor de Salário</h1>
+  <p class="subtitulo">Saiba quanto vale sua hora de trabalho.</p>
+  
+  <form id="form-calculadora" class="formulario" novalidate>
+    <div class="campos">
+      <label class="campo">
+        Salário Mensal (R$):
+        <input type="number" name="salario" step="0.01" required />
+      </label>
+    </div>
+    <button type="submit" class="botao">Calcular</button>
+  </form>
+  
+  <section id="resultado" class="resultado" aria-live="polite" hidden>
+    <h2 class="resultado-titulo">Resultado</h2>
+    <div class="resultado-conteudo"></div>
+    <p class="resultado-nota">Estimativa educacional, sem valor legal.</p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { linha, grupo, mostrarResultado, campoValor } from '../../lib/resultado.ts'
+  import { moeda } from '../../lib/format.ts'
+  
+  const form = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const salario = parseFloat((form.elements.namedItem('salario') as HTMLInputElement).value)
+      
+      let html = grupo('Equivalências', [
+        linha('Hora (220h, "")', moeda(salario / 220)),
+        linha('Dia (22d, "")', moeda(salario / 22)),
+        linha('Semana', moeda(salario / 4)),
+        linha('Anual', moeda(salario * 12))
+      ])
+      mostrarResultado(html)
+    })
+  }
+</script>

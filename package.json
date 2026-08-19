@@ -1,0 +1,22 @@
+{
+  "name": "brasil-calcula",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Calculadoras práticas e confiáveis para brasileiros. Tudo no navegador, sem cadastro.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.2.1",
+    "astro": "^5.1.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@vitejs/plugin-legacy": "^6.1.1",
+    "typescript": "^5.6.3"
+  }
+}

@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+---
+<BaseLayout titulo="Simulador de Mesada" descricao="Quanto guardar por mês para uma criança." rota="/curiosidade/mesada/">
+  <nav class="trilha"><a href="/">Início</a> / <a href="/curiosidade/">Curiosidades</a> / <span>Mesada</span></nav>
+  <h1>🧓 Simulador de Mesada</h1>
+  <p class="subtitulo">Planeje a mesada dos seus filhos e ensine a guardar.</p>
+  
+  <form id="form-calculadora" class="formulario" novalidate>
+    <div class="campos">
+      <div class="campo">
+        <label for="idade">Idade da criança</label>
+        <input type="number" id="idade" min="5" max="17" step="1" value="10" inputmode="numeric" required>
+      </div>
+      <div class="campo">
+        <label for="valor">Valor da mesada semanal (R$)</label>
+        <input type="number" id="valor" min="0" step="0.01" inputmode="decimal" placeholder="0,00" required>
+      </div>
+    </div>
+    <button type="submit" class="botao">Calcular</button>
+  </form>
+
+  <section id="resultado" class="resultado" aria-live="polite" hidden>
+    <h2 class="resultado-titulo">Resultado</h2>
+    <div class="resultado-conteudo"></div>
+    <p class="resultado-nota">Simulação educacional. Valores podem variar conforme a prática dos pais.</p>
+  </section>
+
+  <section class="explicacao">
+    <h2>Por que dar mesada?</h2>
+    <p>A mesada ensina às crianças a lidar com dinheiro de forma prática. Estudos mostram que crianças que recebem mesada aprendem mais rápido a administrar recursos financeiros na vida adulta.</p>
+    <p>Uma dica: quando a criança guardar parte da mesada, os pais podem complementar com juros simulados — isso ensina o conceito de investimento desde cedo.</p>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  const form = document.getElementById('form-calculadora')
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault()
+      
+      const idade = parseInt(document.getElementById('idade').value)
+      const valorSemanal = parseFloat(document.getElementById('valor').value.replace(',', '.'))
+      
+      if (!idade || idade < 5 || idade > 17) {
+        mostrarErro('Informe uma idade entre 5 e 17 anos.')
+        return
+      }
+      if (!valorSemanal || valorSemanal <= 0) {
+        mostrarErro('Informe o valor da mesada semanal.')
+        return
+      }
+      
+      const mesesRestantes = (18 - idade) * 12
+      const semanasRestantes = mesesRestantes * 4.33
+      const totalGuardado = semanasRestantes * valorSemanal
+      const valorMensal = valorSemanal * 4.33
+      const valorAnual = valorMensal * 12
+      
+      // Projeção com juros compostos (poupança: 0.5% a.m.)
+      const taxaMensal = 0.005
+      let totalComJuros = 0
+      for (let i = 0; i < mesesRestantes; i++) {
+        totalComJuros = (totalComJuros + valorMensal) * (1 + taxaMensal)
+      }
+      
+      const html = 
+        '<div class="resultado-grupo">' +
+          '<div class="resultado-linha"><span>Mesada semanal</span><strong>R$ ' + valorSemanal.toFixed(2) + '</strong></div>' +
+          '<div class="resultado-linha"><span>Mensal (4,33 semanas)</span><strong>R$ ' + valorMensal.toFixed(2) + '</strong></div>' +
+          '<div class="resultado-linha"><span>Anual</span><strong>R$ ' + valorAnual.toFixed(2) + '</strong></div>' +
+        '</div>' +
+        '<div class="resultado-grupo">' +
+          '<div class="resultado-linha total"><span>Total até os 18 anos (sem juros)</span><strong>R$ ' + totalGuardado.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + '</strong></div>' +
+          '<div class="resultado-linha"><span>Total com juros da poupança</span><strong>R$ ' + totalComJuros.toLocaleString('pt-BR', {minimumFractionDigits: 2}) + '</strong></div>' +
+          '<div class="resultado-linha"><span>Juros ganhos</span><strong>R$ ' + (totalComJuros - totalGuardado).toLocaleString('pt-BR', {minimumFractionDigits: 2}) + '</strong></div>' +
+        '</div>'
+      
+      mostrarResultado(html)
+    })
+  }
+  
+  function mostrarErro(msg) {
+    const secao = document.getElementById('resultado')
+    if (!secao) return
+    secao.querySelector('.resultado-conteudo').innerHTML = '<p class="resultado-erro">' + msg + '</p>'
+    secao.hidden = false
+  }
+  
+  function mostrarResultado(html) {
+    const secao = document.getElementById('resultado')
+    if (!secao) return
+    secao.querySelector('.resultado-conteudo').innerHTML = html
+    secao.hidden = false
+    secao.scrollIntoView({ block: 'nearest' })
+  }
+</script>

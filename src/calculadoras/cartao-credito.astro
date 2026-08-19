@@ -1,0 +1,46 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro'
+import CampoFormulario from '../componentes/CampoFormulario.astro'
+import { tabelas } from '../lib/tabelas.ts'
+
+const { meta } = Astro.props
+---
+
+<CalculatorLayout meta={meta}>
+  <CampoFormulario nome="valor" rotulo="Valor Total da Fatura (R$)" tipo="number" prefixo="R$" min="0" step="0.01" inputmode="decimal" obrigatorio />
+  <CampoFormulario nome="parcelas" rotulo="Número de Parcelas" tipo="number" min="1" valor="12" />
+  <CampoFormulario nome="taxaJuros" rotulo="Taxa Mensal de Juros (%)" tipo="number" min="0" step="0.01" valor="2.5" />
+</CalculatorLayout>
+
+<script>
+  import { simularCartao } from '../lib/investimentos.ts'
+  import { tabelas } from '../lib/tabelas.ts'
+  import { moeda, parseNumero, percentual } from '../lib/format.ts'
+  import { mostrarResultado, mostrarErro, linha, grupo, campoValor } from '../lib/resultado.ts'
+
+  const formulario = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (formulario) {
+    formulario.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const valor = parseNumero(campoValor(formulario, 'valor'))
+      const parcelas = parseInt(campoValor(formulario, 'parcelas') || '12')
+      const taxaJurosMensal = parseNumero(campoValor(formulario, 'taxaJuros') || '2.5')
+
+      if (!valor || valor <= 0) {
+        mostrarErro('Informe o valor da fatura.')
+        return
+      }
+
+      const r = simularCartao({ valor, parcelas, taxaJurosMensal })
+
+      mostrarResultado(
+        grupo('Simulação do Cartão de Crédito', [
+          linha('Parcela Mensal', moeda(r.parcelaValor)),
+          linha('Total Pago', moeda(r.totalPago)),
+          linha('Total de Juros', moeda(r.totalJuros)),
+          linha('Percentual de Juros', percentual(r.jurosPercentual))
+        ])
+      )
+    })
+  }
+</script>

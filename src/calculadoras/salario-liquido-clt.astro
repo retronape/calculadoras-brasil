@@ -1,0 +1,58 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro'
+import CampoFormulario from '../componentes/CampoFormulario.astro'
+import { tabelas } from '../lib/tabelas.ts'
+
+const { meta } = Astro.props
+---
+
+<CalculatorLayout meta={meta}>
+  <CampoFormulario nome="salario" rotulo="Salário bruto mensal (R$)" tipo="number" prefixo="R$" min="0" step="0.01" inputmode="decimal" obrigatorio />
+  <CampoFormulario nome="dependentes" rotulo="Número de dependentes" tipo="number" min="0" valor="0" />
+  <CampoFormulario nome="outrosDescontos" rotulo="Outros descontos (R$)" tipo="number" prefixo="R$" min="0" step="0.01" valor="0" />
+  <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;margin-top:0.5rem;">
+    <input type="checkbox" name="descontoSimplificado" checked /> Aplicar desconto simplificado
+  </label>
+</CalculatorLayout>
+
+<script>
+  import { inssClt, irrfMensal } from '../lib/tributos.ts'
+  import { tabelas } from '../lib/tabelas.ts'
+  import { moeda, parseNumero, percentual } from '../lib/format.ts'
+  import { mostrarResultado, mostrarErro, linha, grupo, campoValor } from '../lib/resultado.ts'
+
+  const formulario = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (formulario) {
+    formulario.addEventListener('submit', (e) => {
+      e.preventDefault()
+
+      const salario = parseNumero(campoValor(formulario, 'salario'))
+      const dependentes = parseInt(campoValor(formulario, 'dependentes') || '0')
+      const outrosDescontos = parseNumero(campoValor(formulario, 'outrosDescontos') || '0')
+      const usarSimplificado = (formulario.elements.namedItem('descontoSimplificado') as HTMLInputElement)?.checked ?? true
+
+      if (!salario || salario <= 0) {
+        mostrarErro('Informe o salário bruto mensal.')
+        return
+      }
+
+      const inss = inssClt(salario, tabelas)
+      const irrf = irrfMensal({ bruto: salario, inss: inss.contribuicao, dependentes, usarSimplificado, t: tabelas })
+      const liquido = salario - inss.contribuicao - irrf.irrf - outrosDescontos
+
+      mostrarResultado(
+        grupo('Descontos', [
+          linha('INSS (7,5% a 14%)', moeda(inss.contribuicao)),
+          linha('IRRF', moeda(irrf.irrf)),
+          linha('Alíquota efetiva INSS', percentual(inss.aliquotaEfetiva)),
+          outrosDescontos > 0 ? linha('Outros descontos', moeda(outrosDescontos)) : ''
+        ]) +
+        grupo('Salário Líquido', [
+          linha('Salário bruto', moeda(salario)),
+          linha('Total descontos', moeda(inss.contribuicao + irrf.irrf + outrosDescontos), 'destaque'),
+          linha('Salário líquido', moeda(liquido), 'total')
+        ])
+      )
+    })
+  }
+</script>

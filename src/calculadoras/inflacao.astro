@@ -1,0 +1,66 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro'
+import CampoFormulario from '../componentes/CampoFormulario.astro'
+import { tabelas } from '../lib/tabelas.ts'
+
+const { meta } = Astro.props
+---
+
+<CalculatorLayout meta={meta}>
+  <CampoFormulario nome="valorAtual" rotulo="Valor Atual (R$)" tipo="number" prefixo="R$" min="0" step="0.01" inputmode="decimal" obrigatorio />
+  <CampoFormulario nome="meses" rotulo="Período (meses)" tipo="number" min="1" valor="12" />
+  <CampoFormulario nome="taxaIpca" rotulo="Taxa IPCA anual (%)" tipo="number" min="0" step="0.01" valor="4.5" ajuda="IPCA acumulado ou estimado ao ano" />
+</CalculatorLayout>
+
+<div id="ipca-ao-vivo" style="font-size:0.82rem;color:var(--mutado);margin-top:0.5rem;"></div>
+
+<script>
+  import { simularInflacao } from '../lib/investimentos.ts'
+  import { moeda, parseNumero, percentual } from '../lib/format.ts'
+  import { mostrarResultado, mostrarErro, linha, grupo, campoValor } from '../lib/resultado.ts'
+  import { obterDadosComBackground } from '../lib/tempo-real.ts'
+
+  // Busca IPCA em tempo real
+  obterDadosComBackground().then((dados) => {
+    if (!dados) return
+    const statusEl = document.getElementById('ipca-ao-vivo')
+    if (statusEl) {
+      const fonte = dados.ipca.fonte === 'api' ? 'ao vivo do BCB' : 'fallback'
+      statusEl.innerHTML = '📡 IPCA acumulado 12m: ' + dados.ipca.valor.toFixed(2) + '% · Fonte: ' + fonte + ' · ' + dados.ipca.data
+      statusEl.style.color = dados.todosAoVivo ? 'var(--verde)' : 'var(--amber)'
+    }
+    // Preenche automaticamente o campo de taxa
+    const campo = document.querySelector<HTMLInputElement>('[name="taxaIpca"]')
+    if (campo && !campo.dataset.tocado) {
+      campo.value = dados.ipca.valor.toFixed(2)
+    }
+  }).catch(() => {})
+
+  const campo = document.querySelector<HTMLInputElement>('[name="taxaIpca"]')
+  campo?.addEventListener('input', () => { if (campo) campo.dataset.tocado = '1' })
+
+  const formulario = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (formulario) {
+    formulario.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const valorAtual = parseNumero(campoValor(formulario, 'valorAtual'))
+      const meses = parseInt(campoValor(formulario, 'meses') || '12')
+      const taxaIpca = parseNumero(campoValor(formulario, 'taxaIpca') || '4.5') / 100
+
+      if (!valorAtual || valorAtual <= 0) {
+        mostrarErro('Informe o valor atual.')
+        return
+      }
+
+      const r = simularInflacao({ valorAtual, taxaIpca, meses })
+
+      mostrarResultado(
+        grupo('Correção pela Inflação', [
+          linha('Valor Futuro Estimado', moeda(r.valorFuturo)),
+          linha('Perda de Poder de Compra', moeda(r.perdaPoderCompra)),
+          linha('Perda Percentual', percentual(r.perdaPercentual))
+        ])
+      )
+    })
+  }
+</script>

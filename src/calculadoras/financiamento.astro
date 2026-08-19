@@ -1,0 +1,51 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro'
+import CampoFormulario from '../componentes/CampoFormulario.astro'
+import { tabelas } from '../lib/tabelas.ts'
+
+const { meta } = Astro.props
+---
+
+<CalculatorLayout meta={meta}>
+  <CampoFormulario nome="valorImovel" rotulo="Valor do Imóvel (R$)" tipo="number" prefixo="R$" min="0" step="0.01" inputmode="decimal" obrigatorio />
+  <CampoFormulario nome="entrada" rotulo="Entrada (R$)" tipo="number" prefixo="R$" min="0" step="0.01" valor="0" />
+  <CampoFormulario nome="taxaJuros" rotulo="Taxa de Juros Anual (%)" tipo="number" min="0" step="0.01" valor="9" />
+  <CampoFormulario nome="prazo" rotulo="Prazo (meses)" tipo="number" min="1" valor="360" />
+  <CampoFormulario nome="sistema" rotulo="Sistema de Amortização" tipo="select" opcoes={[{valor: 'sac', rotulo: 'SAC (decrescente)'}, {valor: 'price', rotulo: 'Price (fixa)'}]} valor="sac" />
+</CalculatorLayout>
+
+<script>
+  import { simularFinanciamento } from '../lib/investimentos.ts'
+  import { tabelas } from '../lib/tabelas.ts'
+  import { moeda, parseNumero, percentual } from '../lib/format.ts'
+  import { mostrarResultado, mostrarErro, linha, grupo, campoValor } from '../lib/resultado.ts'
+
+  const formulario = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (formulario) {
+    formulario.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const valorImovel = parseNumero(campoValor(formulario, 'valorImovel'))
+      const entrada = parseNumero(campoValor(formulario, 'entrada') || '0')
+      const taxaJurosAnual = parseNumero(campoValor(formulario, 'taxaJuros') || '9')
+      const prazoMeses = parseInt(campoValor(formulario, 'prazo') || '360')
+      const sistema = (campoValor(formulario, 'sistema') || 'sac') as 'sac' | 'price'
+
+      if (!valorImovel || valorImovel <= 0) {
+        mostrarErro('Informe o valor do imóvel.')
+        return
+      }
+
+      const r = simularFinanciamento({ valorImovel, entrada, taxaJurosAnual, prazoMeses, sistema })
+
+      mostrarResultado(
+        grupo('Projeção de Financiamento (' + r.sistema.toUpperCase() + ')', [
+          linha('Valor Financiado', moeda(r.valorFinanciado)),
+          linha('Parcela Inicial', moeda(r.parcelaInicial)),
+          linha('Parcela Final', moeda(r.parcelaFinal)),
+          linha('Total Pago', moeda(r.totalPago)),
+          linha('Total de Juros', moeda(r.totalJuros), 'destaque')
+        ])
+      )
+    })
+  }
+</script>

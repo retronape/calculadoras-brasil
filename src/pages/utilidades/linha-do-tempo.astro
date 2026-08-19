@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+---
+<BaseLayout titulo="Linha do Tempo Financeira" descricao="Simule o crescimento do seu patrimônio" rota="/utilidades/linha-do-tempo/">
+  <nav class="trilha"><a href="/">Início</a> / <a href="/utilidades/">Utilidades</a> / <span>Linha do Tempo</span></nav>
+  <h1>Linha do Tempo</h1>
+  <p class="subtitulo">Veja seu dinheiro crescer com juros compostos (CDI 0.417% a.m.).</p>
+  
+  <form id="form-calculadora" class="formulario" novalidate>
+    <div class="campos">
+      <label class="campo">
+        Aporte Mensal (R$):
+        <input type="number" name="aporte" step="0.01" required />
+      </label>
+      <label class="campo">
+        Tempo (anos):
+        <input type="number" name="anos" required />
+      </label>
+    </div>
+    <button type="submit" class="botao">Calcular</button>
+  </form>
+  
+  <section id="resultado" class="resultado" aria-live="polite" hidden>
+    <h2 class="resultado-titulo">Simulação</h2>
+    <div class="resultado-conteudo"></div>
+    <p class="resultado-nota">Estimativa educacional, baseada em CDI fixo.</p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { linha, grupo, mostrarResultado } from '../../lib/resultado.ts'
+  import { moeda } from '../../lib/format.ts'
+  
+  const form = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const aporte = parseFloat((form.elements.namedItem('aporte') as HTMLInputElement).value)
+      const anos = parseInt((form.elements.namedItem('anos') as HTMLInputElement).value)
+      
+      const meses = anos * 12
+      const taxa = 0.00417
+      const total = aporte * ((Math.pow(1 + taxa, meses) - 1) / taxa)
+      
+      let html = grupo('Projeção', [
+        linha('Total Investido', moeda(aporte * meses)),
+        linha('Total com Juros', moeda(total))
+      ])
+      mostrarResultado(html)
+    })
+  }
+</script>

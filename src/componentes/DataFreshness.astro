@@ -1,0 +1,38 @@
+---
+import { siteConfig } from '../config/site.ts'
+
+interface MetaTabela {
+  fonte?: string
+  data?: string
+}
+
+const meta: MetaTabela = {
+  fonte: siteConfig.taxasBcb.fonte,
+  data: siteConfig.taxasBcb.dataFallback
+}
+---
+
+{meta.data && (
+  <div class="vigencia">
+    <small>
+      Dados válidos desde: <strong>{meta.data}</strong>
+      {meta.fonte && <> — Fonte: {meta.fonte}</>}
+    </small>
+  </div>
+)}
+
+<style>
+  .vigencia {
+    padding: 0.4rem 0.75rem;
+    border-left: 3px solid var(--cor-primaria, #2563eb);
+    background: var(--cor-fundo-alt, #f8f9fa);
+    border-radius: 0 0.25rem 0.25rem 0;
+    font-size: 0.8rem;
+    color: var(--cor-texto-muted, #666);
+    margin: 0.75rem 0;
+  }
+
+  .vigencia small {
+    line-height: 1.5;
+  }
+</style>

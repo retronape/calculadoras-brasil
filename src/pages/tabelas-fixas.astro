@@ -1,0 +1,239 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { tabelas } from '../lib/tabelas.ts'
+import { inssClt, irrfMensal } from '../lib/tributos.ts'
+
+const salarios = [
+  tabelas.salarioMinimo,
+  2500,
+  3500,
+  5000,
+  7000,
+  10000,
+  15000
+]
+
+interface LinhaTabela {
+  salario: number
+  inss: number
+  aliqInss: number
+  baseIrrf: number
+  irrf: number
+  liquido: number
+}
+
+const dados: LinhaTabela[] = salarios.map((salario) => {
+  const inss = inssClt(salario, tabelas)
+  const irrf = irrfMensal({ bruto: salario, inss: inss.contribuicao, dependentes: 0, usarSimplificado: true, t: tabelas })
+  return {
+    salario,
+    inss: inss.contribuicao,
+    aliqInss: Number(inss.aliquotaEfetiva.toFixed(2)),
+    baseIrrf: irrf.base,
+    irrf: irrf.irrf,
+    liquido: salario - inss.contribuicao - irrf.irrf
+  }
+})
+
+function fmt(v: number): string {
+  return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+}
+---
+
+<BaseLayout
+  titulo="Tabelas Fixas"
+  descricao="Tabelas com salários líquidos, INSS e IRPF já calculados para diferentes valores."
+  rota="/tabelas-fixas/"
+>
+  <section class="hero">
+    <h1>Tabelas Fixas</h1>
+    <p class="subtitulo">Valores calculados automaticamente com base nas tabelas vigentes de {tabelas.meta.ano}.</p>
+  </section>
+
+  <p class="aviso-tabela">
+    Valores meramente estimativos. Resultados reais podem variar conforme dependentes, deduções e regime de trabalho.
+    Consulte sempre um contador.
+  </p>
+
+  <h2>Salário Líquido CLT</h2>
+  <p>Considera apenas descontos de INSS progressivo e IRPF mensal com desconto simplificado, sem dependentes.</p>
+  <div class="tabela-wrapper">
+    <table class="tabela-fixa">
+      <thead>
+        <tr>
+          <th>Salário Bruto</th>
+          <th>INSS</th>
+          <th>Alíq. INSS</th>
+          <th>Base IRPF</th>
+          <th>IRPF</th>
+          <th>Líquido</th>
+        </tr>
+      </thead>
+      <tbody>
+        {dados.map((d) => (
+          <tr>
+            <td data-label="Salário Bruto">{fmt(d.salario)}</td>
+            <td data-label="INSS">{fmt(d.inss)}</td>
+            <td data-label="Alíq. INSS">{d.aliqInss}%</td>
+            <td data-label="Base IRPF">{fmt(d.baseIrrf)}</td>
+            <td data-label="IRPF">{fmt(d.irrf)}</td>
+            <td data-label="Líquido"><strong>{fmt(d.liquido)}</strong></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>INSS Progressivo (Detalhado)</h2>
+  <p>Contribuição do empregado CLT por faixa salarial progressiva.</p>
+  <div class="tabela-wrapper">
+    <table class="tabela-fixa">
+      <thead>
+        <tr>
+          <th>Faixa Salarial</th>
+          <th>Alíquota</th>
+          <th>Descrição</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Faixa">Até {fmt(tabelas.inss.faixas[0].ate)}</td>
+          <td data-label="Alíquota">7,5%</td>
+          <td data-label="Descrição">Primeira faixa — salário mínimo</td>
+        </tr>
+        <tr>
+          <td data-label="Faixa">De {fmt(tabelas.inss.faixas[0].ate + 0.01)} a {fmt(tabelas.inss.faixas[1].ate)}</td>
+          <td data-label="Alíquota">9,0%</td>
+          <td data-label="Descrição">Segunda faixa</td>
+        </tr>
+        <tr>
+          <td data-label="Faixa">De {fmt(tabelas.inss.faixas[1].ate + 0.01)} a {fmt(tabelas.inss.faixas[2].ate)}</td>
+          <td data-label="Alíquota">12%</td>
+          <td data-label="Descrição">Terceira faixa</td>
+        </tr>
+        <tr>
+          <td data-label="Faixa">De {fmt(tabelas.inss.faixas[2].ate + 0.01)} a {fmt(tabelas.inss.teto)}</td>
+          <td data-label="Alíquota">14%</td>
+          <td data-label="Descrição">Quarta faixa — teto do INSS</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>IRPF Mensal (Desconto Simplificado)</h2>
+  <p>Alíquotas progressivas do Imposto de Renda Pessoa Física mensal com desconto simplificado de {fmt(tabelas.irrf.mensal.descontoSimplificado)}.</p>
+  <div class="tabela-wrapper">
+    <table class="tabela-fixa">
+      <thead>
+        <tr>
+          <th>Base de Cálculo</th>
+          <th>Alíquota</th>
+          <th>Dedução</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Base">Até {fmt(tabelas.irrf.mensal.faixas[0].ate!)}</td>
+          <td data-label="Alíquota">Isento</td>
+          <td data-label="Dedução">—</td>
+        </tr>
+        <tr>
+          <td data-label="Base">De {fmt(tabelas.irrf.mensal.faixas[0].ate! + 0.01)} a {fmt(tabelas.irrf.mensal.faixas[1].ate!)}</td>
+          <td data-label="Alíquota">7,5%</td>
+          <td data-label="Dedução">{fmt(tabelas.irrf.mensal.faixas[1].deducao)}</td>
+        </tr>
+        <tr>
+          <td data-label="Base">De {fmt(tabelas.irrf.mensal.faixas[1].ate! + 0.01)} a {fmt(tabelas.irrf.mensal.faixas[2].ate!)}</td>
+          <td data-label="Alíquota">15%</td>
+          <td data-label="Dedução">{fmt(tabelas.irrf.mensal.faixas[2].deducao)}</td>
+        </tr>
+        <tr>
+          <td data-label="Base">De {fmt(tabelas.irrf.mensal.faixas[2].ate! + 0.01)} a {fmt(tabelas.irrf.mensal.faixas[3].ate!)}</td>
+          <td data-label="Alíquota">22,5%</td>
+          <td data-label="Dedução">{fmt(tabelas.irrf.mensal.faixas[3].deducao)}</td>
+        </tr>
+        <tr>
+          <td data-label="Base">Acima de {fmt(tabelas.irrf.mensal.faixas[3].ate!)}</td>
+          <td data-label="Alíquota">27,5%</td>
+          <td data-label="Dedução">{fmt(tabelas.irrf.mensal.faixas[4].deducao)}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section class="explicacao">
+    <h2>Como foram calculados?</h2>
+    <ul>
+      <li><strong>INSS:</strong> alíquotas progressivas aplicadas por faixa (7,5% a 14%).</li>
+      <li><strong>IRPF:</strong> cálculo na faixa correspondente, com desconto simplificado de {fmt(tabelas.irrf.mensal.descontoSimplificado)} (o maior entre deduções reais e o simplificado).</li>
+      <li><strong>Sem dependentes:</strong> os valores acima consideram zero dependentes.</li>
+      <li>Fonte: {tabelas.meta.fonte}</li>
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .aviso-tabela {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    padding: 0.75rem 1rem;
+    border-radius: 0 0.5rem 0.5rem 0;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+  }
+  [data-tema="dark"] .aviso-tabela {
+    background: #1c1a0e;
+    border-left-color: #f59e0b;
+    color: #fde68a;
+  }
+  .tabela-wrapper {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+  }
+  .tabela-fixa {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    margin-bottom: 1rem;
+  }
+  .tabela-fixa th,
+  .tabela-fixa td {
+    padding: 0.6rem 0.8rem;
+    text-align: right;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  [data-tema="dark"] .tabela-fixa th,
+  [data-tema="dark"] .tabela-fixa td {
+    border-bottom-color: #334155;
+  }
+  .tabela-fixa th {
+    background: #f1f5f9;
+    font-weight: 600;
+    text-align: right;
+  }
+  [data-tema="dark"] .tabela-fixa th {
+    background: #1e293b;
+  }
+  .tabela-fixa td:first-child,
+  .tabela-fixa th:first-child {
+    text-align: left;
+  }
+  .tabela-fixa td:last-child {
+    font-weight: 600;
+  }
+  .tabela-fixa tr:hover td {
+    background: #f8fafc;
+  }
+  [data-tema="dark"] .tabela-fixa tr:hover td {
+    background: #1e293b;
+  }
+  @media (max-width: 600px) {
+    .tabela-fixa {
+      font-size: 0.82rem;
+    }
+    .tabela-fixa th,
+    .tabela-fixa td {
+      padding: 0.4rem 0.5rem;
+    }
+  }
+</style>

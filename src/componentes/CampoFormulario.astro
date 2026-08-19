@@ -1,0 +1,126 @@
+---
+export interface Props {
+  nome: string
+  rotulo: string
+  tipo?: 'text' | 'number' | 'select' | 'date'
+  prefixo?: string
+  sufixo?: string
+  min?: string | number
+  max?: string | number
+  step?: string | number
+  inputmode?: string
+  placeholder?: string
+  valor?: string | number
+  value?: string | number
+  obrigatorio?: boolean
+  ajuda?: string
+  opcoes?: { valor: string; rotulo: string }[]
+}
+
+const {
+  nome,
+  rotulo,
+  tipo = 'text',
+  prefixo,
+  sufixo,
+  min,
+  max,
+  step,
+  inputmode,
+  placeholder,
+  valor: valorProp,
+  value: valueProp,
+  obrigatorio = false,
+  ajuda,
+  opcoes
+} = Astro.props
+
+const valor = valorProp ?? valueProp ?? undefined
+
+const id = `campo-${nome}`
+const ajudaId = ajuda ? `${id}-ajuda` : undefined
+---
+
+<div class="campo">
+  <label for={id}>
+    {rotulo}{obrigatorio && <span class="obrigatorio" aria-label="obrigatório"> *</span>}
+  </label>
+
+  {prefixo && <span class="prefixo">{prefixo}</span>}
+
+  {tipo === 'select' ? (
+    <select
+      id={id}
+      name={nome}
+      required={obrigatorio}
+      aria-describedby={ajudaId}
+    >
+      {opcoes?.map((op) => (
+        <option value={op.valor} selected={op.valor === valor}>{op.rotulo}</option>
+      ))}
+    </select>
+  ) : (
+<input
+        type={tipo}
+        id={id}
+        name={nome}
+        min={min !== undefined ? String(min) : undefined}
+        max={max !== undefined ? String(max) : undefined}
+        step={step !== undefined ? String(step) : undefined}
+        inputmode={inputmode as any}
+        placeholder={placeholder}
+        value={valor}
+        required={obrigatorio}
+        aria-describedby={ajudaId}
+      />
+  )}
+
+  {sufixo && <span class="sufixo">{sufixo}</span>}
+
+  {ajuda && <span class="ajuda" id={ajudaId}>{ajuda}</span>}
+</div>
+
+<style>
+  .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .campo label {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .obrigatorio {
+    color: #e53e3e;
+  }
+
+  .campo input,
+  .campo select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--cor-borda, #ccc);
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    background: var(--cor-fundo, #fff);
+    color: var(--cor-texto, #1a1a1a);
+  }
+
+  .campo input:focus,
+  .campo select:focus {
+    outline: 2px solid var(--cor-primaria, #2563eb);
+    outline-offset: 1px;
+  }
+
+  .prefixo,
+  .sufixo {
+    font-size: 0.85rem;
+    color: #666;
+  }
+
+  .ajuda {
+    font-size: 0.8rem;
+    color: #666;
+  }
+</style>

@@ -1,0 +1,144 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+---
+<BaseLayout titulo="Conversor de Moedas" descricao="Converta valores entre BRL, USD e EUR com cotações do Banco Central." rota="/utilidades/conversor-moedas/">
+  <nav class="trilha"><a href="/">Início</a> / <a href="/utilidades/">Utilidades</a> / <span>Conversor de Moedas</span></nav>
+  <h1>💱 Conversor de Moedas</h1>
+  <p class="subtitulo">Cotações direto do Banco Central do Brasil (PTAX).</p>
+
+  <div id="status-cotacao" style="font-size:0.82rem;color:var(--mutado);margin-bottom:0.75rem;">Carregando cotações...</div>
+
+  <form id="form-calculadora" class="formulario" novalidate>
+    <div class="campos">
+      <div class="campo">
+        <label for="valor">Valor</label>
+        <div class="campo-controle">
+          <span class="campo-prefixo">R$</span>
+          <input type="number" id="valor" name="valor" step="0.01" inputmode="decimal" placeholder="0,00" required>
+        </div>
+      </div>
+      <div class="campo">
+        <label for="de">De</label>
+        <select id="de" name="de">
+          <option value="BRL" selected>Real (BRL)</option>
+          <option value="USD">Dólar (USD)</option>
+          <option value="EUR">Euro (EUR)</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label for="para">Para</label>
+        <select id="para" name="para">
+          <option value="BRL">Real (BRL)</option>
+          <option value="USD" selected>Dólar (USD)</option>
+          <option value="EUR">Euro (EUR)</option>
+        </select>
+      </div>
+    </div>
+    <button type="submit" class="botao">Converter</button>
+  </form>
+
+  <section id="resultado" class="resultado" aria-live="polite" hidden>
+    <h2 class="resultado-titulo">Resultado</h2>
+    <div class="resultado-conteudo"></div>
+    <p id="resultado-fonte" class="resultado-nota"></p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { linha, grupo, mostrarResultado, mostrarErro } from '../../lib/resultado.ts'
+  import { moeda } from '../../lib/format.ts'
+  import { obterDadosComBackground, forcarAtualizacao } from '../../lib/tempo-real.ts'
+  import { ler } from '../../lib/storage.ts'
+  import type { DadosTempoReal } from '../../lib/api-bcb.ts'
+
+  // Fallbacks estáticos
+  const FALLBACKS = { dolar: 5.50, euro: 6.00 }
+
+  let cotacoes: DadosTempoReal | null = null
+
+  // Tenta pegar dados em tempo real
+  async function carregarCotacoes() {
+    const statusEl = document.getElementById('status-cotacao')
+    try {
+      cotacoes = await obterDadosComBackground()
+      if (cotacoes) {
+        const fonte = cotacoes.todosAoVivo ? 'ao vivo do BCB' : 'cache'
+        const dtDolar = cotacoes.dolar.data
+        const dtEuro = cotacoes.euro.data
+        if (statusEl) {
+          statusEl.innerHTML = '✅ Cotações ' + fonte +
+            ' — USD ' + cotacoes.dolar.valor.toFixed(2) + ' (' + dtDolar + ')' +
+            ' · EUR ' + cotacoes.euro.valor.toFixed(2) + ' (' + dtEuro + ')'
+          statusEl.style.color = cotacoes.todosAoVivo ? 'var(--verde)' : 'var(--amber)'
+        }
+      } else {
+        if (statusEl) {
+          statusEl.textContent = '⚠️ Cotações fixas aproximadas (modo leve)'
+          statusEl.style.color = 'var(--amber)'
+        }
+      }
+    } catch {
+      if (statusEl) {
+        statusEl.textContent = '⚠️ Sem conexão — usando taxas fixas'
+        statusEl.style.color = 'var(--amber)'
+      }
+    }
+  }
+
+  carregarCotacoes()
+
+  function obterTaxa(moedaDe: string, moedaPara: string): { taxa: number; fonte: string; data: string } {
+    const cDolar = cotacoes?.dolar.valor ?? FALLBACKS.dolar
+    const cEuro = cotacoes?.euro.valor ?? FALLBACKS.euro
+    const fonte = cotacoes?.todosAoVivo ? 'CBPTAX' : 'fixa aproximada'
+    const data = cotacoes?.dolar.data ?? 'referência'
+
+    // Todas as taxas em relação ao BRL
+    const taxas: Record<string, number> = {
+      BRL: 1,
+      USD: cDolar,
+      EUR: cEuro
+    }
+
+    // Converter: moedaDe → BRL → moedaPara
+    const valorEmBrl = taxas[moedaDe] || 1
+    const valorFinal = (1 / taxas[moedaPara]) * valorEmBrl
+    return { taxa: valorFinal, fonte, data }
+  }
+
+  const form = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+
+      const valorInput = (form.elements.namedItem('valor') as HTMLInputElement).value
+      const valor = parseFloat(valorInput.replace(',', '.'))
+      const moedaDe = (form.elements.namedItem('de') as HTMLSelectElement).value
+      const moedaPara = (form.elements.namedItem('para') as HTMLSelectElement).value
+
+      if (!valor || valor <= 0) {
+        mostrarErro('Informe um valor válido.')
+        return
+      }
+
+      const { taxa, fonte, data } = obterTaxa(moedaDe, moedaPara)
+      const resultado = valor * taxa
+
+      const símbolos: Record<string, string> = { BRL: 'R$', USD: 'US$', EUR: '€' }
+
+      mostrarResultado(
+        grupo([
+          linha(símbolos[moedaDe] + ' ' + valor.toFixed(2) + ' ' + moedaDe,
+               símbolos[moedaPara] + ' ' + resultado.toFixed(2) + ' ' + moedaPara, 'destaque'),
+          linha('Taxa utilizada', '1 ' + moedaDe + ' = ' + taxa.toFixed(4) + ' ' + moedaPara),
+          linha('Taxa contrária', '1 ' + moedaPara + ' = ' + (1 / taxa).toFixed(4) + ' ' + moedaDe)
+        ])
+      )
+
+      const fonteEl = document.getElementById('resultado-fonte')
+      if (fonteEl) {
+        fonteEl.textContent = 'Fonte: ' + fonte + ' · Atualizado em: ' + data
+      }
+    })
+  }
+</script>

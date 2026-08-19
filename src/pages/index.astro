@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { calculadoras, rotulosCategoria } from '../calculadoras/registry.ts'
+import { siteConfig } from '../config/site.ts'
+
+function iconeCategoria(cat: string): string {
+  const icones: Record<string, string> = {
+    trabalho: '💼', impostos: '🧾', investimentos: '📈', previdencia: '🏛️', estudos: '📚'
+  }
+  return icones[cat] || '🧮'
+}
+---
+
+<BaseLayout
+  titulo="BrasilCalcula — Calculadoras práticas e confiáveis"
+  descricao={siteConfig.tagline}
+  rota="/"
+>
+  <section class="hero">
+    <h1>BrasilCalcula</h1>
+    <p class="subtitulo">{siteConfig.tagline}</p>
+  </section>
+
+  <h2>Calculadoras</h2>
+  <ul class="grade-calculadoras">
+    {calculadoras.map((c) => (
+      <li>
+        <a class="cartao" href={'/calculadora/' + c.slug + '/'} data-categoria={c.meta.categoria}>
+          <div class="cartao-topo">
+            <span class="cartao-icone">{iconeCategoria(c.meta.categoria)}</span>
+            <span class="cartao-etiqueta">{rotulosCategoria[c.meta.categoria]}</span>
+          </div>
+          <h3>{c.meta.titulo}</h3>
+          <p>{c.meta.descricao}</p>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <div style="margin-top: 2rem; text-align: center;">
+    <a href="/utilidades/" class="botao botao-secundario">Ver Utilidades →</a>
+    <a href="/curiosidade/" class="botao botao-secundario" style="margin-left: .5rem;">Ver Curiosidades →</a>
+  </div>
+
+  <section class="explicacao">
+    <h2>Como funciona</h2>
+    <p>Tudo roda no seu navegador. Nenhum dado sai do seu dispositivo. Use <kbd>Ctrl+K</kbd> para buscar qualquer calculadora.</p>
+    <p>As tabelas são de <strong>2026</strong> (vigentes a partir de 01/2026). Veja <a href="/tabelas-fixas/">Tabelas Fixas</a>.</p>
+  </section>
+</BaseLayout>

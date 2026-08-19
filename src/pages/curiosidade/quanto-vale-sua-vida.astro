@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+---
+<BaseLayout titulo="Quanto Vale Sua Vida?" descricao="Calcule o valor total da sua vida financeira." rota="/curiosidade/quanto-vale-sua-vida/">
+  <nav class="trilha"><a href="/">Início</a> / <a href="/curiosidade/">Curiosidades</a> / <span>Quanto Vale Sua Vida</span></nav>
+  <h1>💰 Quanto Vale Sua Vida?</h1>
+  <p class="subtitulo">Calcule quanto você já ganhou e quanto vai ganhar na vida.</p>
+  
+  <form id="form-calculadora" class="formulario" novalidate>
+    <div class="campos">
+      <div class="campo">
+        <label for="salario">Salário mensal atual (R$)</label>
+        <input type="number" id="salario" min="0" step="0.01" inputmode="decimal" placeholder="0,00" required>
+      </div>
+      <div class="campo">
+        <label for="idade">Sua idade</label>
+        <input type="number" id="idade" min="18" max="100" step="1" inputmode="numeric" required>
+      </div>
+      <div class="campo">
+        <label for="aposentadoria">Idade de aposentadoria</label>
+        <input type="number" id="aposentadoria" min="50" max="80" step="1" value="65" inputmode="numeric" required>
+      </div>
+    </div>
+    <button type="submit" class="botao">Calcular</button>
+  </form>
+
+  <section id="resultado" class="resultado" aria-live="polite" hidden>
+    <h2 class="resultado-titulo">Resultado</h2>
+    <div class="resultado-conteudo"></div>
+    <p class="resultado-nota">Estimativa baseada no salário atual sem considerar reajustes ou promoções.</p>
+  </section>
+
+  <section class="explicacao">
+    <h2>Curiosidades</h2>
+    <p>Se você ganha R$ 5.000 por mês e trabalha desde os 18 anos, já ganhou mais de R$ 2 milhões na vida — mesmo que pareça pouco!</p>
+    <p>A chave é como você administra esse dinheiro ao longo do tempo.</p>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  const form = document.getElementById('form-calculadora')
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault()
+      
+      const salario = parseFloat(document.getElementById('salario').value.replace(',', '.'))
+      const idade = parseInt(document.getElementById('idade').value)
+      const idadeApos = parseInt(document.getElementById('aposentadoria').value)
+      
+      if (!salario || salario <= 0) {
+        mostrarErro('Informe o salário mensal.')
+        return
+      }
+      if (!idade || idade < 18) {
+        mostrarErro('Informe sua idade (mínimo 18).')
+        return
+      }
+      if (!idadeApos || idadeApos <= idade) {
+        mostrarErro('A idade de aposentadoria deve ser maior que a sua idade.')
+        return
+      }
+      
+      const anosRestantes = idadeApos - idade
+      const totalFuturo = salario * 12 * anosRestantes
+      const horasPorMes = 220
+      const valorHora = salario / horasPorMes
+      const valorDia = valorHora * 8
+      const valorMinuto = valorHora / 60
+      
+      // Com inflação projetada 4.5% a.a.
+      const inflacao = 1.045
+      let totalComInflacao = 0
+      for (let i = 0; i < anosRestantes; i++) {
+        totalComInflacao += salario * 12 * Math.pow(inflacao, i)
+      }
+      
+      const html = 
+        '<div class="resultado-grupo">' +
+          '<div class="resultado-grupo-titulo">Seus ganhos até a aposentadoria</div>' +
+          '<div class="resultado-linha destaque"><span>Total projetado</span><strong>R$ ' + totalFuturo.toLocaleString('pt-BR') + '</strong></div>' +
+          '<div class="resultado-linha"><span>Com inflação projetada</span><strong>R$ ' + totalComInflacao.toLocaleString('pt-BR') + '</strong></div>' +
+        '</div>' +
+        '<div class="resultado-grupo">' +
+          '<div class="resultado-grupo-titulo">Seu valor por tempo</div>' +
+          '<div class="resultado-linha"><span>Por hora</span><strong>R$ ' + valorHora.toFixed(2) + '</strong></div>' +
+          '<div class="resultado-linha"><span>Por dia (8h)</span><strong>R$ ' + valorDia.toFixed(2) + '</strong></div>' +
+          '<div class="resultado-linha"><span>Por minuto</span><strong>R$ ' + valorMinuto.toFixed(2) + '</strong></div>' +
+        '</div>'
+      
+      mostrarResultado(html)
+    })
+  }
+  
+  function mostrarErro(msg) {
+    const secao = document.getElementById('resultado')
+    if (!secao) return
+    secao.querySelector('.resultado-conteudo').innerHTML = '<p class="resultado-erro">' + msg + '</p>'
+    secao.hidden = false
+  }
+  
+  function mostrarResultado(html) {
+    const secao = document.getElementById('resultado')
+    if (!secao) return
+    secao.querySelector('.resultado-conteudo').innerHTML = html
+    secao.hidden = false
+    secao.scrollIntoView({ block: 'nearest' })
+  }
+</script>

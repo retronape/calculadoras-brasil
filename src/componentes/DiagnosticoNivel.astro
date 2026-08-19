@@ -1,0 +1,115 @@
+---
+---
+
+<details id="diagnostico-nivel" class="diagnostico-nivel">
+  <summary>🔍 Diagnóstico de performance</summary>
+  <div id="diagnostico-conteudo" class="diagnostico-conteudo">
+    <p>Carregando informações...</p>
+  </div>
+</details>
+
+<script>
+  function preencherDiagnostico() {
+    const conteudo = document.getElementById('diagnostico-conteudo')
+    if (!conteudo) return
+
+    const navegador = navigator.userAgent
+    const cssVarsSuporte = CSS.supports('color', 'var(--teste)') ? '✅ Sim' : '❌ Não'
+    const nucleosCpu = navigator.hardwareConcurrency || 'Desconhecido'
+    const memoria = (navigator as any).deviceMemory
+      ? `${(navigator as any).deviceMemory} GB`
+      : 'Não disponível'
+    const modo = document.documentElement.getAttribute('data-modo') || 'padrao'
+
+    const labelsModo: Record<string, string> = {
+      leve: '🪶 Leve',
+      padrao: '⚡ Padrão',
+      rico: '✨ Rico',
+      maximo: '🚀 Máximo'
+    }
+
+    conteudo.innerHTML = `
+      <table>
+        <tr>
+          <td><strong>Navegador</strong></td>
+          <td>${navegador}</td>
+        </tr>
+        <tr>
+          <td><strong>CSS Variables</strong></td>
+          <td>${cssVarsSuporte}</td>
+        </tr>
+        <tr>
+          <td><strong>Núcleos CPU</strong></td>
+          <td>${nucleosCpu}</td>
+        </tr>
+        <tr>
+          <td><strong>Memória</strong></td>
+          <td>${memoria}</td>
+        </tr>
+        <tr>
+          <td><strong>Modo ativo</strong></td>
+          <td>${labelsModo[modo] || modo}</td>
+        </tr>
+      </table>
+    `
+  }
+
+  function inicializar() {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('diagnostico') === '1') {
+      const detalhes = document.getElementById('diagnostico-nivel') as HTMLDetailsElement
+      if (detalhes) {
+        detalhes.open = true
+        preencherDiagnostico()
+      }
+    }
+
+    const detalhes = document.getElementById('diagnostico-nivel') as HTMLDetailsElement
+    if (detalhes) {
+      detalhes.addEventListener('toggle', () => {
+        if (detalhes.open) {
+          preencherDiagnostico()
+        }
+      })
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inicializar)
+  } else {
+    inicializar()
+  }
+</script>
+
+<style>
+  .diagnostico-nivel {
+    border: 1px solid var(--cor-borda, #ccc);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+    font-size: 0.85rem;
+  }
+
+  .diagnostico-nivel summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .diagnostico-conteudo {
+    margin-top: 0.5rem;
+  }
+
+  .diagnostico-conteudo table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .diagnostico-conteudo td {
+    padding: 0.25rem 0.5rem;
+    border-bottom: 1px solid var(--cor-borda, #eee);
+  }
+
+  .diagnostico-conteudo td:first-child {
+    width: 30%;
+  }
+</style>

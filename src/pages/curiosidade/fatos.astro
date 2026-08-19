@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+---
+<BaseLayout titulo="Fatos Financeiros" descricao="Curiosidades financeiras que você não sabia." rota="/curiosidade/fatos/">
+  <nav class="trilha"><a href="/">Início</a> / <a href="/curiosidade/">Curiosidades</a> / <span>Fatos</span></nav>
+  <h1>💡 Fatos Financeiros</h1>
+  <p class="subtitulo">Curiosidades que vão surpreender você.</p>
+  
+  <div id="fato-atual" class="resultado" style="margin-top: 1rem;">
+    <div class="resultado-conteudo">
+      <p id="fato-texto" style="font-size: 1.1rem; line-height: 1.6; margin: 0;"></p>
+      <p id="fato-fonte" class="resultado-nota"></p>
+    </div>
+  </div>
+  
+  <div style="margin-top: 1rem; text-align: center;">
+    <button type="button" class="botao" onclick="mostrarProximoFato()">Mostrar outro fato</button>
+  </div>
+
+  <section class="explicacao">
+    <h2>Fontes</h2>
+    <p>Os fatos são baseados em dados públicos do IBGE, Banco Central do Brasil, Receita Federal e legislação brasileira vigente.</p>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  const fatos = [
+    { texto: "O Brasil já teve inflação anual de mais de 2.000% ao ano. Em 1990, a inflação chegou a 2.748% — uma de suas piores crises.", fonte: "IBGE" },
+    { texto: "A maioria dos brasileiros (cerca de 60%) nunca declarou Imposto de Renda. Mas todos pagam impostos indiretamente — cerca de 35% do preço de um produto vai para impostos.", fonte: "Receita Federal" },
+    { texto: "O salário mínimo em 2026 (R$ 1.621) equivale a aproximadamente US$ 312, muito abaixo do custo de vida real em grandes centros.", fonte: "IBGE" },
+    { texto: "A taxa Selic acumulada nos últimos 20 anos é superior a 400%. Se você tivesse investido R$ 1.000 na poupança em 2004, hoje teria cerca de R$ 3.500.", fonte: "Banco Central" },
+    { texto: "Mais de 60% dos aposentados brasileiros recebem um salário mínimo (R$ 1.621 em 2026). A média nacional de aposentadoria é de R$ 2.000.", fonte: "INSS" },
+    { texto: "A tabela do IRPF de 2026 isenta quem ganha até R$ 2.428,80 por mês (R$ 29.145,60 por ano). Acima disso, a alíquota vai de 7,5% a 27,5%.", fonte: "Receita Federal" },
+    { texto: "O FGTS rende apenas 3% ao ano, abaixo da inflação. Em 5 anos, o poder de compra do saldo cai cerca de 15-20%.", fonte: "Caixa Econômica Federal" },
+    { texto: "Um brasileiro gasta, em média, R$ 1.200 por mês só em impostos. Em um ano, são R$ 14.400 — quase 9 salários mínimos.", fonte: "Confaz" },
+    { texto: "O prazo médio de um financiamento imobiliário no Brasil é de 30 anos. Ao final, o devedor paga cerca de 3 vezes o valor do imóvel em juros.", fonte: "ABECIP" },
+    { texto: "A cada 5 anos, o poder de compra do real cai pela metade. R$ 1.000 em 2020 equivale a aproximadamente R$ 1.300 em 2026.", fonte: "IBGE" },
+    { texto: "Menos de 5% da população brasileira aplica em renda variável (ações). No exterior, essa porcentagem pode chegar a 50%.", fonte: "CVM" },
+    { texto: "O Brasil tem 36 tributos diferentes. Em comparação, a Alemanha tem 9 e os EUA têm 6.", fonte: "SEBRAE" },
+    { texto: "A cobrança indevida de taxas bancárias gasta R$ 1 bilhão por mês para os brasileiros. Muitos nem percebem que estão pagando a mais.", fonte:" Banco Central" },
+    { texto: "Em média, o brasileiro tem apenas 3 meses de reserva de emergência. O recomendado é de 6 a 12 meses.", fonte: "FGV" },
+    { texto: "O crédito consignado é um dos mais caros do mundo: pode chegar a 170% ao ano em一些 parcelas de bancos privados.", fonte: "Procon" },
+    { texto: "A taxa de juros média do Brasil é de 2,5% ao mês, uma das maiores do mundo. Nos EUA, é de 0,3% ao mês.", fonte: "Banco Central" },
+    { texto: "Mais de 80% dos brasileiros estão endividados. A dívida média por pessoa é de R$ 12.000.", fonte: "SPC Brasil" },
+    { texto: "A	expectativa de vida de quem ganha mais de 10 salários mínimos é 16 anos maior do que quem ganha 1 salário mínimo.", fonte: "IBGE" },
+    { texto: "O investimento em educação de qualidade pode aumentar a renda em até 300% ao longo da vida.", fonte: "FGV" },
+    { texto: "A cada hora que você lê sobre finanças, você pode economizar milhares de reais no futuro. O conhecimento é o melhor investimento.", fonte: "BrasilCalcula" }
+  ]
+
+  let indiceAtual = 0
+
+  function mostrarProximoFato() {
+    const textoEl = document.getElementById('fato-texto')
+    const fonteEl = document.getElementById('fato-fonte')
+    if (!textoEl || !fonteEl) return
+    
+    const fato = fatos[indiceAtual]
+    textoEl.textContent = fato.texto
+    fonteEl.textContent = 'Fonte: ' + fato.fonte
+    indiceAtual = (indiceAtual + 1) % fatos.length
+  }
+
+  // Mostrar primeiro fato baseado na data (seed)
+  const hoje = new Date()
+  indiceAtual = (hoje.getFullYear() + hoje.getMonth() + hoje.getDate()) % fatos.length
+  mostrarProximoFato()
+</script>

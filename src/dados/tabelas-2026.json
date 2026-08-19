@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "ano": "2026",
+    "vigenciaAte": "01/2026",
+    "atualizadaEm": "2026-08-15",
+    "fonte": "Portaria Interministerial MPS/MF nº 13/2026; Lei 15.191/2025 e Lei 15.270/2025.",
+    "nota": "Tabelas vigentes. Atualize anualmente com fontes oficiais."
+  },
+  "salarioMinimo": 1621.0,
+  "inss": {
+    "teto": 8475.55,
+    "faixas": [
+      { "ate": 1621.0, "aliquota": 7.5 },
+      { "ate": 2902.84, "aliquota": 9 },
+      { "ate": 4354.27, "aliquota": 12 },
+      { "ate": 8475.55, "aliquota": 14 }
+    ],
+    "autonomo": {
+      "aliquotas": { "integral": 20, "simplificado": 11, "baixaRenda": 5 },
+      "planoSimplificado": 178.31,
+      "baixaRendaValor": 81.05
+    }
+  },
+  "irrf": {
+    "mensal": {
+      "faixas": [
+        { "ate": 2428.8, "aliquota": 0, "deducao": 0 },
+        { "ate": 2826.65, "aliquota": 7.5, "deducao": 182.16 },
+        { "ate": 3751.05, "aliquota": 15, "deducao": 394.16 },
+        { "ate": 4664.68, "aliquota": 22.5, "deducao": 675.49 },
+        { "ate": null, "aliquota": 27.5, "deducao": 908.73 }
+      ],
+      "dependente": 189.59,
+      "descontoSimplificado": 607.2,
+      "reducao": { "zeroAte": 5000.0, "maxReducao": 312.89, "base": 978.62, "coef": 0.133145, "zeraEm": 7350.0 }
+    }
+  },
+  "irpf": {
+    "anual": {
+      "faixas": [
+        { "ate": 29145.6, "aliquota": 0, "deducao": 0 },
+        { "ate": 33919.8, "aliquota": 7.5, "deducao": 2185.92 },
+        { "ate": 45012.6, "aliquota": 15, "deducao": 4729.91 },
+        { "ate": 55976.16, "aliquota": 22.5, "deducao": 8105.85 },
+        { "ate": null, "aliquota": 27.5, "deducao": 10904.66 }
+      ],
+      "dependente": 2275.08,
+      "descontoSimplificado": 17640.0,
+      "descontoSimplificadoPercentual": 20,
+      "reducao": { "zeroAte": 60000.0, "maxReducao": 2694.15, "base": 8429.73, "coef": 0.095575, "zeraEm": 88200.0 }
+    }
+  },
+  "rendaFixa": {
+    "ir": [
+      { "ate": 180, "aliquota": 22.5 },
+      { "ate": 360, "aliquota": 20 },
+      { "ate": 720, "aliquota": 17.5 },
+      { "ate": null, "aliquota": 15 }
+    ]
+  },
+  "fgts": {
+    "depositoMensal": 8,
+    "multaSemJustaCausa": 40,
+    "jurosAnuais": 3,
+    "distribuicaoAnual": 0
+  },
+  "poupanca": {
+    "selicLimite": 8.5,
+    "taxaQuandoAcima": 0.5,
+    "percentualQuandoAbaixo": 70
+  }
+}

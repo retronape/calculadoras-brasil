@@ -1,0 +1,126 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { siteConfig } from '../config/site.ts'
+---
+
+<BaseLayout
+  titulo="Termos de Uso"
+  descricao="Termos e condições de uso do BrasilCalcula."
+  rota="/termos-de-uso/"
+>
+  <section class="hero">
+    <h1>Termos de Uso</h1>
+    <p class="subtitulo">Condições para utilização do {siteConfig.nome}.</p>
+  </section>
+
+  <p class="ultima-atualizacao">Última atualização: 15 de agosto de 2026.</p>
+
+  <section class="conteudo-estatico">
+    <h2>1. Aceitação dos termos</h2>
+    <p>
+      Ao acessar e utilizar o {siteConfig.nome}, você concorda com estes Termos de Uso.
+      Se não concordar com algum dos termos, não utilize o site.
+    </p>
+
+    <h2>2. Finalidade exclusivamente educacional</h2>
+    <p>
+      O {siteConfig.nome} é uma ferramenta de <strong>caráter meramente educacional e informativo</strong>.
+      Todos os cálculos, simulações e resultados apresentados <strong>não possuem valor legal, contábil ou financeiro oficial</strong>.
+      Eles servem apenas como referência aproximada para fins de aprendizado e planejamento pessoal.
+    </p>
+    <p>
+      <strong>Nunca tome decisões financeiras ou jurídicas baseando-se exclusivamente nos resultados deste site.</strong>
+    </p>
+
+    <h2>3. Não substitui profissionais</h2>
+    <p>
+      Os resultados do {siteConfig.nome} <strong>não substituem</strong> a orientação de:
+    </p>
+    <ul>
+      <li>Contadores ou advogados trabalhistas</li>
+      <li>Consultores financeiros ou investidores credenciados pela CVM</li>
+      <li>Agentes do INSS ou da Receita Federal</li>
+      <li>Qualquer profissional habilitado</li>
+    </ul>
+    <p>
+      Sempre consulte um profissional qualificado antes de tomar decisões baseadas em valores calculados aqui.
+    </p>
+
+    <h2>4. Limitação de responsabilidade</h2>
+    <p>
+      O {siteConfig.nome} e seus criadores <strong>não se responsabilizam</strong> por:
+    </p>
+    <ul>
+      <li>Erros ou imprecisões nos resultados apresentados</li>
+      <li>Decisões financeiras, jurídicas ou trabalhistas tomadas com base nos cálculos</li>
+      <li>Perdas materiais ou imateriais decorrentes do uso das informações</li>
+      <li>Mudanças na legislação que tornem os cálculos desatualizados</li>
+      <li>Diferenças entre os valores estimados e os valores efetivamente devidos</li>
+    </ul>
+
+    <h2>5. Precisão dos cálculos</h2>
+    <p>
+      Embora nos esforcemos para manter cálculos corretos e atualizados, os resultados são <strong>estimativas</strong>
+      que podem não considerar todas as variáveis de um caso real, incluindo mas não se limitando a:
+    </p>
+    <ul>
+      <li>Dependentes e deduções específicas</li>
+      <li>Acordos coletivos e convenções trabalhistas</li>
+      <li>Particularidades de cada regime de trabalho (CLT, PJ, autônomo)</li>
+      <li>Benefícios, descontos variáveis e compensações</li>
+    </ul>
+
+    <h2>6. Propriedade intelectual</h2>
+    <p>
+      O código-fonte do {siteConfig.nome} é disponibilizado sob licença open source.
+      Consulte o repositório no GitHub para os detalhes da licença.
+    </p>
+
+    <h2>7. Links para terceiros</h2>
+    <p>
+      O site pode conter links para sites de terceiros.
+      O {siteConfig.nome} não endossa, controla ou se responsabiliza pelo conteúdo, políticas
+      ou práticas de sites externos.
+    </p>
+
+    <h2>8. Disponibilidade</h2>
+    <p>
+      O site é fornecido "como está", sem garantia de disponibilidade ininterrupta.
+      Podemos realizar manutenções, atualizações ou desativar o site a qualquer momento, sem aviso prévio.
+    </p>
+
+    <h2>9. Alterações nestes termos</h2>
+    <p>
+      Reservamo-nos o direito de alterar estes Termos de Uso a qualquer momento.
+      As alterações entram em vigor imediatamente após a publicação nesta página.
+      O uso continuado do site após alterações constitui aceitação dos novos termos.
+    </p>
+
+    <h2>10. Contato</h2>
+    <p>
+      Para dúvidas sobre estes termos, entre em contato via <a href={`mailto:${siteConfig.emailContato}`}>{siteConfig.emailContato}</a>.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .ultima-atualizacao {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+  .conteudo-estatico h2 {
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  .conteudo-estatico p {
+    margin-bottom: 0.75rem;
+  }
+  .conteudo-estatico ul {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+  }
+  .conteudo-estatico li {
+    margin-bottom: 0.3rem;
+  }
+</style>

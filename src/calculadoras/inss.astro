@@ -1,0 +1,50 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro'
+import CampoFormulario from '../componentes/CampoFormulario.astro'
+import { tabelas } from '../lib/tabelas.ts'
+
+const { meta } = Astro.props
+---
+
+<CalculatorLayout meta={meta}>
+  <CampoFormulario nome="modo" rotulo="Modo de contribuição" tipo="select" opcoes={[{valor: 'clt', rotulo: 'CLT'}, {valor: 'integral', rotulo: 'Autônomo (20%)'}, {valor: 'simplificado', rotulo: 'Autônomo Simplificado (11%)'}, {valor: 'baixaRenda', rotulo: 'Autônomo Baixa Renda (5%)'}]} obrigatorio />
+  <CampoFormulario nome="salario" rotulo="Salário / Base de contribuição (R$)" tipo="number" prefixo="R$" min="0" step="0.01" inputmode="decimal" obrigatorio />
+</CalculatorLayout>
+
+<script>
+  import { inssClt, inssAutonomo } from '../lib/tributos.ts'
+  import { tabelas } from '../lib/tabelas.ts'
+  import { moeda, parseNumero, percentual } from '../lib/format.ts'
+  import { mostrarResultado, mostrarErro, linha, grupo, campoValor } from '../lib/resultado.ts'
+
+  const formulario = document.getElementById('form-calculadora') as HTMLFormElement | null
+  const modoSelect = formulario?.querySelector('[name="modo"]') as HTMLSelectElement | null
+
+  if (formulario) {
+    formulario.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const modo = modoSelect?.value ?? 'clt'
+      const salario = parseNumero(campoValor(formulario, 'salario'))
+
+      if (!salario || salario <= 0) {
+        mostrarErro('Informe a base de contribuição.')
+        return
+      }
+
+      let resultado
+      if (modo === 'clt') {
+        resultado = inssClt(salario, tabelas)
+      } else {
+        resultado = inssAutonomo(salario, modo as 'integral' | 'simplificado' | 'baixaRenda', tabelas)
+      }
+
+      mostrarResultado(
+        grupo('Contribuição INSS', [
+          linha('Base de Cálculo', moeda(resultado.base)),
+          linha('Contribuição', moeda(resultado.contribuicao)),
+          linha('Alíquota Efetiva', percentual(resultado.aliquotaEfetiva))
+        ])
+      )
+    })
+  }
+</script>

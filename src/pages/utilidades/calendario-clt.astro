@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+---
+<BaseLayout titulo="Calendário CLT" descricao="Calcule datas importantes da sua CLT" rota="/utilidades/calendario-clt/">
+  <nav class="trilha"><a href="/">Início</a> / <a href="/utilidades/">Utilidades</a> / <span>Calendário CLT</span></nav>
+  <h1>Calendário CLT</h1>
+  <p class="subtitulo">Descubra datas de férias, 13º e FGTS com base na sua contratação.</p>
+  
+  <form id="form-calculadora" class="formulario" novalidate>
+    <div class="campos">
+      <label class="campo">
+        Data de Admissão:
+        <input type="date" name="admissao" required />
+      </label>
+    </div>
+    <button type="submit" class="botao">Calcular</button>
+  </form>
+  
+  <section id="resultado" class="resultado" aria-live="polite" hidden>
+    <h2 class="resultado-titulo">Datas Importantes</h2>
+    <div class="resultado-conteudo"></div>
+    <p class="resultado-nota">Estimativa educacional, sem valor legal.</p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { linha, grupo, mostrarResultado, mostrarErro } from '../../lib/resultado.ts'
+  
+  const form = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const dataAdmissao = new Date((form.elements.namedItem('admissao') as HTMLInputElement).value)
+      if (isNaN(dataAdmissao.getTime())) return mostrarErro('Data inválida')
+
+      const feriasInicio = new Date(dataAdmissao); feriasInicio.setFullYear(dataAdmissao.getFullYear() + 1);
+      const decimoTerceiro = new Date(dataAdmissao.getFullYear(), 10, 30); // Novembro
+      
+      let html = grupo('Datas Estimadas', [
+        linha('Férias (Período Aquisitivo, "")', feriasInicio.toLocaleDateString('pt-BR')),
+        linha('Pagamento 13º (1ª Parcela, "")', 'Até 30 de novembro')
+      ])
+      mostrarResultado(html)
+    })
+  }
+</script>

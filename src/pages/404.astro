@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+
+<BaseLayout
+  titulo="Página não encontrada"
+  descricao="A página que você procura não existe ou foi movida."
+  rota="/404/"
+>
+  <section class="erro-404">
+    <h1 class="erro-404-numero">404</h1>
+    <p class="erro-404-texto">Página não encontrada</p>
+    <p class="erro-404-descricao">
+      O endereço que você digitou não existe ou foi movido para outro local.
+    </p>
+    <a href="/" class="botao">Voltar para o início</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .erro-404 {
+    text-align: center;
+    padding: 4rem 1rem;
+  }
+  .erro-404-numero {
+    font-size: 6rem;
+    font-weight: 800;
+    line-height: 1;
+    margin: 0;
+    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .erro-404-texto {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 1rem 0 0.5rem;
+  }
+  .erro-404-descricao {
+    color: #64748b;
+    margin-bottom: 2rem;
+  }
+</style>

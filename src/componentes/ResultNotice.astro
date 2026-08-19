@@ -1,0 +1,27 @@
+---
+export interface Props {
+  extra?: string
+}
+
+const { extra } = Astro.props
+---
+
+<div class="resultado-nota" role="note">
+  <p>
+    <strong>Aviso:</strong> Os valores calculados são <strong>estimativas</strong> e não substituem
+    uma orientação profissional. Resultados podem variar conforme a fonte de dados e a data de
+    consulta. Para decisões financeiras importantes, consulte um profissional habilitado.
+  </p>
+  {extra && <p class="resultado-nota-extra">{extra}</p>}
+  <p>
+    Veja mais detalhes em <a href="/avisos-legais/">Avisos legais</a>.
+  </p>
+</div>
+
+<style>
+  .resultado-nota a {
+    color: inherit;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+</style>

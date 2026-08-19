@@ -1,0 +1,73 @@
+---
+import { siteConfig } from '../config/site.ts'
+
+export interface Props {
+  posicao: 'resultado' | 'secundario'
+}
+
+const { posicao } = Astro.props
+
+const slot = posicao === 'resultado' ? siteConfig.adsense.slotResultado : siteConfig.adsense.slotSecundario
+const formato = posicao === 'resultado' ? 'auto' : 'auto'
+---
+
+{siteConfig.adsense.habilitado && (
+  <div class="ad-container" data-ad-posicao={posicao}>
+    <ins
+      class="adsbygoogle"
+      style="display:block"
+      data-ad-client={siteConfig.adsense.clientId}
+      data-ad-slot={slot}
+      data-ad-format={formato}
+      data-full-width-responsive="true"
+    ></ins>
+  </div>
+)}
+
+<script>
+  function podeCarregarAnuncios(): boolean {
+    const modo = document.documentElement.getAttribute('data-modo')
+    if (modo !== 'rico' && modo !== 'maximo') return false
+
+    try {
+      const consent = localStorage.getItem('cb:consent-ads')
+      if (consent === 'false') return false
+    } catch {}
+
+    return true
+  }
+
+  function inicializar() {
+    if (!podeCarregarAnuncios()) return
+
+    const containers = document.querySelectorAll<HTMLElement>('.ad-container[data-ad-posicao]')
+    containers.forEach((container) => {
+      try {
+        const ins = container.querySelector('ins.adsbygoogle')
+        if (ins) {
+          ;(window as any).adsbygoogle = (window as any).adsbygoogle || []
+          ;(window as any).adsbygoogle.push({})
+        }
+      } catch {
+        // AdSense not loaded
+      }
+    })
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inicializar)
+  } else {
+    inicializar()
+  }
+</script>
+
+<style>
+  .ad-container {
+    margin: 1.5rem 0;
+    text-align: center;
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>

@@ -1,0 +1,361 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { siteConfig } from '../config/site.ts'
+---
+
+<BaseLayout
+  titulo="Avisos Legais"
+  descricao="Explicação detalhada sobre os cálculos, suas limitações e quando consultar um profissional."
+  rota="/avisos-legais/"
+>
+  <section class="hero">
+    <h1>Avisos Legais</h1>
+    <p class="subtitulo">Entenda o que cada cálculo significa e por que são apenas estimativas.</p>
+  </section>
+
+  <section class="conteudo-estatico">
+
+    <h2>1. Natureza das informações</h2>
+    <p>
+      Todas as informações e cálculos disponibilizados pelo {siteConfig.nome} possuem <strong>caráter meramente
+      educacional e informativo</strong>. Nenhum resultado apresentado constitui orientação jurídica, contábil,
+      tributária ou financeira.
+    </p>
+    <p>
+      Os cálculos são elaborados com base na legislação brasileira vigente, mas <strong>não consideram todas as
+      variáveis</strong> que podem afetar o resultado em um caso concreto.
+    </p>
+
+    <h2>2. Sobre o Salário Líquido CLT</h2>
+    <h3>O que é calculado</h3>
+    <p>
+      A calculadora de salário líquido aplica as alíquotas progressivas de INSS (7,5% a 14%) e as faixas do
+      Imposto de Renda Retido na Fonte (IRPF mensal) conforme a legislação vigente.
+    </p>
+    <h3>Por que é uma estimativa</h3>
+    <ul>
+      <li>Não considera dependentes cadastrados (que reduzem a base do IRPF em R$ 189,59/mês por dependente)</li>
+      <li>Utiliza o desconto simplificado, que pode não ser o mais vantajoso em todos os casos</li>
+      <li>Não inclui outros descontos que podem existir na folha: vale-refeição, plano de saúde, seguro de vida</li>
+      <li>Não considera adiantamento salarial, comissões variáveis ou outros pagamentos incidentais</li>
+      <li>Acordos coletivos podem estabelecer condições diferentes das previstas na CLT</li>
+    </ul>
+    <h3>Quando consultar um profissional</h3>
+    <p>
+      Consulte um contador ou advogado trabalhista quando precisar de um cálculo preciso para
+      fins de平面amento financeiro, negociação salarial ou processos trabalhistas.
+    </p>
+
+    <h2>3. Sobre o INSS</h2>
+    <h3>O que é calculado</h3>
+    <p>
+      A calculadora de INSS aplica as alíquotas progressivas para o empregado CLT, contribuinte individual
+      (plano integral, simplificado e baixa renda).
+    </p>
+    <h3>Por que é uma estimativa</h3>
+    <ul>
+      <li>O teto do INSS pode mudar durante o ano em caso de reajustes extraordinários</li>
+      <li>Contribuintes individuais podem ter regras específicas conforme a atividade</li>
+      <li>Segurados especiais (rurais, domésticos) possuem regras próprias não contempladas</li>
+      <li>O tempo de contribuição e o histórico salarial afetam o valor do benefício futuro</li>
+    </ul>
+    <h3>Quando consultar um profissional</h3>
+    <p>
+      Consulte um advogado previdenciário ou o próprio INSS (disque 135) para cálculos que envolvam
+      aposentadoria por tempo de contribuição, auxílio-doença ou qualquer benefício previdenciário.
+    </p>
+
+    <h2>4. Sobre o IRPF Anual</h2>
+    <h3>O que é calculado</h3>
+    <p>
+      A declaração de IRPF anual simula o imposto devido com base nos rendimentos totais do ano,
+      aplicando as faixas progressivas anuais e a redução anual prevista na legislação.
+    </p>
+    <h3>Por que é uma estimativa</h3>
+    <ul>
+      <li>Não inclui rendimentos isentos (FGTS, previdência privada PGBL, etc.)</li>
+      <li>Não considera deduções médicas, educacionais, previdenciárias ou de pensão alimentícia</li>
+      <li>Rendimentos de segunda fonte, aluguéis e investimentos podem alterar significativamente a base</li>
+      <li>A dedução simplificada pode não ser a mais vantajosa para o seu caso</li>
+    </ul>
+    <h3>Quando consultar um profissional</h3>
+    <p>
+      Sempre que tiver rendimentos de mais de uma fonte, rendimentos de investimentos, aluguéis ou
+      deduções complexas, consulte um contador para a elaboração da sua declaração.
+    </p>
+
+    <h2>5. Sobre o FGTS</h2>
+    <h3>O que é calculado</h3>
+    <p>
+      A calculadora de FGTS projeta o saldo acumulado com base nos depósitos mensais de 8% sobre o salário
+      e nos rendimentos anuais (juros + distribuição de lucros).
+    </p>
+    <h3>Por que é uma estimativa</h3>
+    <ul>
+      <li>Os rendimentos do FGTS variam conforme a taxa definida anualmente pelo governo</li>
+      <li>Não considera saques para moradia própria, demissão sem justa causa ou outros eventos</li>
+      <li>A multa de 40% sobre o saldo pode variar conforme a situação (justa causa vs. sem justa causa)</li>
+      <li>O valor do depósito mensal é calculado sobre o salário bruto, sem considerar horas extras eventuais</li>
+    </ul>
+
+    <h2>6. Sobre a Rescisão Trabalhista</h2>
+    <h3>O que é calculado</h3>
+    <p>
+      A calculadora de rescisão estima os valores devidos na saída do emprego: saldo de salário,
+      aviso prévio, 13º proporcional, férias proporcionais + 1/3, FGTS do período e multa de 40%.
+    </p>
+    <h3>Por que é uma estimativa</h3>
+    <ul>
+      <li>Acordos coletivos podem prever verbas adicionais não contempladas na CLT</li>
+      <li>O aviso prévio proporcional (30 + 3 dias por ano) pode não ser aplicado uniformemente</li>
+      <li>Adiantamentos, empréstimos consignados e outros descontos não são considerados</li>
+      <li>Não inclui indenizações por assédio, discriminação ou danos morais</li>
+      <li>A base de cálculo de férias pode variar conforme o período aquisitivo</li>
+    </ul>
+    <h3>Quando consultar um profissional</h3>
+    <p>
+      <strong>Sempre.</strong> A rescisão trabalhista é um dos cálculos mais complexos do Direito do Trabalho.
+      Consulte um advogado trabalhista ou o sindicato da sua categoria antes de aceitar qualquer valor.
+    </p>
+
+    <h2>7. Sobre Horas Extras</h2>
+    <h3>O que é calculado</h3>
+    <p>
+      Calcula o valor da hora normal (salário / 220), aplica os acréscimos de 50% (horas extras comuns)
+      e 100% (domingos e feriados).
+    </p>
+    <h3>Por que é uma estimativa</h3>
+    <ul>
+      <li>Não considera adicional noturno (20% entre 22h e 5h)</li>
+      <li>Não inclui insalubridade ou periculosidade</li>
+      <li>Acordos coletivos podem estabelecer percentuais diferentes</li>
+      <li>Não considera banco de horas ou compensações</li>
+    </ul>
+
+    <h2>8. Sobre o 13º Salário</h2>
+    <h3>O que é calculado</h3>
+    <p>
+      Estima o valor líquido da 1ª ou 2ª parcela do 13º salário, descontando INSS e IRPF proporcionalmente.
+    </p>
+    <h3>Por que é uma estimativa</h3>
+    <ul>
+      <li>O desconto de IRPF na 1ª parcela é facultativo (muitos empregadores não aplicam)</li>
+      <li>Não considera meses trabalhados incompletos de forma precisa em todos os casos</li>
+      <li>Adiantamentos recebidos ao longo do ano podem afetar o cálculo</li>
+    </ul>
+
+    <h2>9. Sobre Férias</h2>
+    <h3>O que é calculado</h3>
+    <p>
+      Calcula o valor de férias proporcionais + 1/3 constitucional, com desconto de INSS e IRPF.
+    </p>
+    <h3>Por que é uma estimativa</h3>
+    <ul>
+      <li>Não considera abono pecuniário (venda de 10 dias)</li>
+      <li>Não inclui férias vencidas (dobro constitucional)</li>
+      <li>O período aquisitivo pode ser diferente de 12 meses</li>
+    </ul>
+
+    <h2>10. Sobre Investimentos</h2>
+    <h3>O que é calculado</h3>
+    <p>
+      Projeções de rendimentos para renda fixa (CDB, LCI, LCA, Tesouro Direto), poupança e comparações.
+    </p>
+    <h3>Por que é uma estimativa</h3>
+    <ul>
+      <li>Taxas de juros podem variar durante o período investido</li>
+      <li>O imposto de renda sobre rendimentos de renda fixa segue tabela regressiva (22,5% a 15%)</li>
+      <li>Não considera taxas de administração, corretagem ou custódia</li>
+      <li>Investimentos de risco (ações, fundos multimercado) possuem volatilidade não modelada</li>
+      <li>A inflação pode erodir o poder de compra do rendimento</li>
+    </ul>
+    <h3>Quando consultar um profissional</h3>
+    <p>
+      Consulte um consultor de investimentos credenciado pela CVM para decisões de investimento.
+      Rentabilidade passada não garante rentabilidade futura.
+    </p>
+
+    <h2>11. Sobre a Aposentadoria</h2>
+    <h3>O que é calculado</h3>
+    <p>
+      Simula a idade mínima, tempo mínimo de contribuição e valor estimado do benefício.
+    </p>
+    <h3>Por que é uma estimativa</h3>
+    <ul>
+      <li>O valor da aposentadoria depende do histórico salarial completo (maiores 80% das contribuições)</li>
+      <li>Não considera tempo de contribuição como homem, wartime ou outras regras de transição</li>
+      <li>Não inclui aposentadoria por invalidez, auxílio-doença ou pensão</li>
+      <li>As regras de transição do sistema híbrido são complexas e individuais</li>
+    </ul>
+    <h3>Quando consultar um profissional</h3>
+    <p>
+      <strong>Strongly recommended.</strong> A Previdência Social possui regras complexas e individualizadas.
+      Consulte um advogado previdenciário ou a perícia do INSS para simulações precisas.
+    </p>
+
+    <h2>12. Sobre o IOF</h2>
+    <h3>O que é calculado</h3>
+    <p>
+      Calcula o Imposto sobre Operações Financeiras (IOF) incidente em operações de crédito e câmbio.
+    </p>
+    <h3>Por que é uma estimativa</h3>
+    <ul>
+      <li>O IOF diário varia conforme o prazo (regressivo, até 0,33% ao dia no crédito)</li>
+      <li>Operações de câmbio possuem alíquota fixa de 0,38%</li>
+      <li>Empréstimos com garantia de imóvel possuem regras diferentes</li>
+    </ul>
+
+    <h2>13. Dados e fontes</h2>
+    <p>
+      Todos os dados utilizados nos cálculos são provenientes de fontes oficiais, incluindo:
+    </p>
+    <ul>
+      <li>Portarias Interministeriais do MPS/MF</li>
+      <li>Leis publicadas no Diário Oficial da União</li>
+      <li>Instruções Normativas da Receita Federal</li>
+      <li>Banco Central do Brasil (para taxas de câmbio e juros)</li>
+    </ul>
+    <p>
+      As tabelas são atualizadas anualmente. Verifique sempre a data de vigência dos dados.
+    </p>
+
+    <h2>14. Não afiliação governamental</h2>
+    <p>
+      O {siteConfig.nome} é um <strong>projeto independente</strong> e não é afiliado, endossado nem um
+      canal oficial de qualquer órgão governamental, incluindo INSS, Receita Federal, Banco Central
+      do Brasil, gov.br ou qualquer outra entidade pública.
+    </p>
+  </section>
+
+  <section class="faq">
+    <h2>Perguntas Frequentes</h2>
+
+    <details>
+      <summary>Os valores estão corretos para minha situação?</summary>
+      <p>
+        Não necessariamente. Cada pessoa possui uma situação trabalhista e tributária única.
+        Dependentes, deduções, acordos coletivos, benefícios e outros fatores podem alterar
+        significativamente o resultado. Considere os valores como uma <strong>referência aproximada</strong>.
+      </p>
+    </details>
+
+    <details>
+      <summary>Posso usar estes cálculos em processos trabalhistas?</summary>
+      <p>
+        Não. Os cálculos do {siteConfig.nome} <strong>não têm valor probatório</strong> e não são
+        aceitos como prova em processos judiciais ou administrativos. Para fins legais, consulte
+        um advogado trabalhista que realize cálculos certificados.
+      </p>
+    </details>
+
+    <details>
+      <summary>Por que o valor do INSS que calcula é diferente do meu?</summary>
+      <p>
+        Verifique se considerou: (1) se você tem dependentes cadastrados, (2) se está em regime CLT,
+        PJ ou autônomo, (3) se há contribuições facultativas, (4) se o salário de referência é o
+        bruto ou o salário-base (sem horas extras). Para cálculos específicos, consulte o INSS.
+      </p>
+    </details>
+
+    <details>
+      <summary>O site armazena meus dados de cálculo?</summary>
+      <p>
+        Não. Todos os cálculos são feitos integralmente no seu navegador. Nenhum dado pessoal ou
+        financeiro é enviado a qualquer servidor. Consulte nossa <a href="/politica-de-privacidade/">Política de Privacidade</a>.
+      </p>
+    </details>
+
+    <details>
+      <summary>Com que frequência as tabelas são atualizadas?</summary>
+      <p>
+        As tabelas são atualizadas anualmente, geralmente em janeiro, quando entram em vigor as
+        novas alíquotas. Caso haja alterações extraordinárias durante o ano, atualizaremos
+        oportunamente. Verifique sempre a data de vigência indicada no rodapé do site.
+      </p>
+    </details>
+
+    <details>
+      <summary>Posso usar o site sem JavaScript?</summary>
+      <p>
+        As calculadoras interativas precisam de JavaScript para funcionar. Para acesso sem JavaScript,
+        utilize as <a href="/tabelas-fixas/">Tabelas Fixas</a>, que contêm valores já calculados
+        para salários de referência.
+      </p>
+    </details>
+
+    <details>
+      <summary>Qual a diferença entre o desconto simplificado e o completo no IRPF?</summary>
+      <p>
+        O desconto simplificado é um valor fixo (atualmente R$ 607,20/mês) que o contribuinte pode
+        usar sem apresentar comprovantes. O cálculo completo considera INSS + dependentes + despesas
+        dedutíveis (educação, saúde, previdência privada). O programa选用 automatically o mais vantajoso.
+      </p>
+    </details>
+
+    <details>
+      <summary>O site é afiliado ao governo?</summary>
+      <p>
+        Não. O {siteConfig.nome} é um projeto <strong>100% independente</strong>, criado e mantido por
+        desenvolvedores sem vínculo com o INSS, Receita Federal, Banco Central ou qualquer órgão
+        governamental. Não representamos, endossamos nem somos um canal oficial de nenhum ente público.
+      </p>
+    </details>
+  </section>
+</BaseLayout>
+
+<style>
+  .conteudo-estatico h2 {
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  .conteudo-estatico h3 {
+    margin-top: 1.25rem;
+    margin-bottom: 0.4rem;
+    font-size: 1.05rem;
+  }
+  .conteudo-estatico p {
+    margin-bottom: 0.75rem;
+  }
+  .conteudo-estatico ul {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+  }
+  .conteudo-estatico li {
+    margin-bottom: 0.3rem;
+  }
+  .faq {
+    margin-top: 3rem;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 1.5rem;
+  }
+  [data-tema="dark"] .faq {
+    border-top-color: #334155;
+  }
+  .faq h2 {
+    margin-bottom: 1rem;
+  }
+  .faq details {
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    background: #f8fafc;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+  }
+  [data-tema="dark"] .faq details {
+    background: #1e293b;
+    border-color: #334155;
+  }
+  .faq summary {
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.25rem 0;
+  }
+  .faq details p {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    color: #475569;
+  }
+  [data-tema="dark"] .faq details p {
+    color: #94a3b8;
+  }
+</style>

@@ -1,0 +1,193 @@
+/**
+ * Temas — estilos completos para modo padrão, rico e máximo.
+ * Modo leve usa só o CSS inline do BaseLayout.
+ */
+
+/* ── Reset e base ────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; color-scheme: dark }
+html[data-tema='light'] { color-scheme: light }
+
+body {
+  margin: 0;
+  font-family: var(--fonte);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--texto);
+  background: var(--fundo);
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; height: auto }
+a { color: var(--primaria); text-decoration: none; transition: color 0.15s ease }
+a:hover { color: var(--primaria-escura) }
+:focus-visible { outline: 3px solid var(--primaria); outline-offset: 2px; border-radius: 4px }
+
+/* ── Layout ──────────────────────────────────────────────── */
+.container { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 1rem }
+
+.cabecalho { background: var(--superficie); border-bottom: 1px solid var(--borda) }
+.cabecalho-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 0; flex-wrap: wrap }
+.marca { font-size: 1.1rem; font-weight: 700; color: var(--primaria); text-decoration: none; display: flex; align-items: center; gap: 0.4rem }
+.marca svg { flex: none }
+.nav-principal { display: flex; gap: 0.75rem; font-size: 0.92rem; flex-wrap: wrap }
+.nav-principal a { color: var(--mutado); text-decoration: none; padding: 0.2rem 0.3rem; transition: color 0.15s ease }
+.nav-principal a:hover { color: var(--primaria) }
+
+.controles-sitio { display: flex; align-items: center; gap: 0.5rem }
+
+/* ── Botão de tema ───────────────────────────────────────── */
+.botao-tema { background: transparent; border: none; color: var(--mutado); cursor: pointer; padding: 0.35rem; border-radius: var(--raio); display: flex; align-items: center; justify-content: center; transition: background 0.15s ease }
+.botao-tema:hover { background: var(--borda2); color: var(--texto) }
+.icone-sol, .icone-lua { display: none }
+html[data-tema='dark'] .icone-sol { display: block }
+html[data-tema='light'] .icone-lua { display: block }
+
+/* ── Seletor de modo ─────────────────────────────────────── */
+.seletor-modo { display: flex; gap: 2px; background: var(--superficie2); border-radius: var(--raio); padding: 3px; border: 1px solid var(--borda) }
+.botao-modo { background: transparent; border: none; color: var(--mutado); font-size: 1rem; padding: 0.3rem 0.5rem; border-radius: calc(var(--raio) - 2px); cursor: pointer; transition: all 0.15s ease; line-height: 1 }
+.botao-modo:hover { background: var(--borda2); color: var(--texto) }
+.botao-modo.ativo { background: var(--primaria); color: #000; box-shadow: 0 2px 6px rgba(56, 189, 248, 0.3) }
+[data-modo-badge] { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--superficie); border: 1px solid var(--borda2); color: var(--texto); padding: 0.5rem 1rem; border-radius: var(--raio2); font-size: 0.85rem; font-weight: 600; box-shadow: var(--sombra-media); opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 200 }
+[data-modo-badge].visivel { opacity: 1 }
+
+.badge-tempo-real { display: inline-block; font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.45rem; border-radius: 999px; margin-top: 0.3rem; letter-spacing: 0.04em }
+.badge-vivo { background: var(--verde); color: #000 }
+.badge-estatico { background: var(--amber); color: #000 }
+.badge-cache { background: var(--mutado); color: var(--texto) }
+.badge-offline { background: var(--borda); color: var(--mutado) }
+
+/* ── Main ────────────────────────────────────────────────── */
+main { padding-top: 1.25rem; padding-bottom: 3rem; min-height: 60vh }
+.hero { margin-bottom: 1.4rem }
+.hero p { color: var(--mutado); max-width: 60ch }
+.subtitulo { color: var(--mutado); margin: 0 0 1rem }
+.trilha { font-size: 0.85rem; color: var(--mutado); margin-bottom: 0.6rem }
+.trilha a { color: var(--mutado) }
+
+/* ── Tipografia ──────────────────────────────────────────── */
+h1 { font-size: 1.45rem; line-height: 1.25; margin: 0.3rem 0 0.35rem }
+h2 { font-size: 1.15rem; margin: 1.4rem 0 0.6rem }
+
+/* ── Formulário ──────────────────────────────────────────── */
+.formulario { background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio2); box-shadow: var(--sombra); padding: 1rem }
+.campos { display: grid; gap: 0.85rem }
+.campo { display: flex; flex-direction: column; gap: 0.25rem }
+.campo label { font-weight: 600; font-size: 0.9rem }
+.campo-obrigatorio { color: var(--rose) }
+.campo-controle { display: flex; align-items: center; gap: 0.4rem; border: 1px solid var(--borda); border-radius: 8px; background: var(--fundo) }
+.campo-controle:focus-within { border-color: var(--primaria); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.22) }
+.campo-prefixo, .campo-sufixo { color: var(--mutado); padding: 0 0.55rem; font-size: 0.95rem; white-space: nowrap }
+.campo input, .campo select { width: 100%; border: none; background: transparent; padding: 0.65rem 0.6rem; font-size: 1rem; font-family: inherit; color: var(--texto); min-width: 0 }
+.campo input::placeholder { color: var(--mutado); opacity: 1 }
+.campo select { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--mutado) 50%), linear-gradient(135deg, var(--mutado) 50%, transparent 50%); background-position: calc(100% - 18px) 55%, calc(100% - 13px) 55%; background-size: 5px 5px; background-repeat: no-repeat }
+.campo-ajuda { color: var(--mutado); font-size: 0.8rem }
+.campocheck { flex-direction: row; align-items: flex-start; gap: 0.5rem; font-weight: 400; font-size: 0.9rem }
+.campocheck input { width: auto; margin-top: 0.2rem; flex: none }
+.campo-extra { border: 1px dashed var(--borda2); border-radius: 8px; padding: 0.6rem; display: grid; gap: 0.6rem }
+.campo-extra-titulo { font-size: 0.85rem; font-weight: 600; color: var(--mutado); margin: 0 }
+
+/* ── Botões ──────────────────────────────────────────────── */
+.botao { display: block; margin-top: 1rem; width: 100%; background: var(--gradiente-botao); color: #fff; border: none; border-radius: 8px; padding: 0.8rem 1rem; font-size: 1.05rem; font-weight: 700; font-family: inherit; cursor: pointer; position: relative; overflow: hidden; transition: filter 0.15s ease }
+.botao:hover { filter: brightness(1.1) }
+.botao-secundario { background: var(--superficie); color: var(--primaria); border: 1px solid var(--primaria); font-weight: 600; font-size: 0.9rem; padding: 0.45rem 0.8rem; width: auto; margin-top: 0 }
+.botao--pequeno { width: auto; margin-top: 0; font-size: 0.85rem; padding: 0.45rem 0.8rem }
+
+/* ── Resultado ───────────────────────────────────────────── */
+.resultado { margin-top: 1.1rem; background: var(--superficie); border: 1px solid var(--borda); border-left: 5px solid var(--acento); border-radius: var(--raio2); box-shadow: var(--sombra); padding: 1rem }
+.resultado-titulo { margin: 0 0 0.6rem; font-size: 1.05rem }
+.resultado-grupo { margin-bottom: 0.85rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--borda) }
+.resultado-grupo:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none }
+.resultado-grupo-titulo { font-weight: 700; font-size: 0.9rem; margin: 0 0 0.35rem; color: var(--acento) }
+.resultado-linha { display: flex; justify-content: space-between; gap: 1rem; padding: 0.28rem 0; font-size: 0.95rem }
+.resultado-linha strong { text-align: right; white-space: nowrap }
+.resultado-linha.total { border-top: 1px solid var(--borda); margin-top: 0.3rem; padding-top: 0.55rem; font-size: 1.05rem }
+.resultado-linha.destaque { color: var(--acento); font-size: 1.1rem }
+.resultado-erro { color: var(--rose); font-weight: 600; margin: 0 }
+.resultado-nota { font-size: 0.82rem; color: var(--mutado); margin: 0.7rem 0 0 }
+
+/* ── Grade de calculadoras ───────────────────────────────── */
+.grade-calculadoras { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 0.9rem }
+.grade-calculadoras > li { min-width: 0 }
+
+.cartao { position: relative; overflow: hidden; display: block; height: 100%; background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio2); box-shadow: var(--sombra); padding: 0.9rem 1rem; color: var(--texto); text-decoration: none; transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease }
+.cartao:hover { transform: translateY(-3px); box-shadow: var(--sombra-media); border-color: var(--acento, var(--primaria)) }
+.cartao::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--acento, var(--primaria)), transparent 85%) }
+.cartao-topo { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.4rem }
+.cartao-icone { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 9px; background: rgba(56, 189, 248, 0.14); color: var(--acento, var(--primaria)) }
+.cartao-icone svg { width: 20px; height: 20px }
+.cartao-etiqueta { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--acento, var(--primaria)); border: 1px solid rgba(56, 189, 248, 0.45); border-radius: 999px; padding: 0.15rem 0.55rem; white-space: nowrap }
+.cartao h3 { margin: 0 0 0.25rem; font-size: 1.02rem; color: var(--texto) }
+.cartao p { margin: 0; font-size: 0.88rem; color: var(--mutado) }
+
+/* ── Rodapé ──────────────────────────────────────────────── */
+.rodape { background: var(--superficie); border-top: 1px solid var(--borda); padding: 1.5rem 0 5rem; margin-top: 3rem }
+.rodape-inner { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: space-between }
+.rodape-aviso p { margin: 0 0 0.5rem; font-size: 0.85rem; line-height: 1.55 }
+.rodape-links { display: flex; flex-wrap: wrap; gap: 0.75rem; font-size: 0.85rem }
+.rodape-links a { color: var(--mutado); text-decoration: none }
+.rodape-links a:hover { color: var(--primaria) }
+.rodape-link { background: none; border: none; padding: 0; font: inherit; color: var(--mutado); font-size: 0.85rem; cursor: pointer; text-decoration: underline }
+.rodape-link:hover { color: var(--primaria) }
+.rodape-meta { flex: 1; min-width: 250px; font-size: 0.8rem; color: var(--mutado); margin-top: 1rem; line-height: 1.55 }
+.rodape-github { font-weight: 600; margin-left: 0.5rem }
+
+/* ── Consentimento ───────────────────────────────────────── */
+.consentimento { position: fixed; bottom: 0; left: 0; right: 0; background: var(--superficie); border-top: 2px solid var(--primaria); padding: 1rem; z-index: 1000; box-shadow: var(--sombra-media) }
+.consentimento p { margin: 0 0 0.75rem; font-size: 0.85rem; line-height: 1.55 }
+.consentimento-acoes { display: flex; gap: 0.5rem; flex-wrap: wrap }
+
+/* ── Badge e aviso noscript ──────────────────────────────── */
+.aviso-noscript { background: var(--superficie2); border-left: 3px solid var(--amber); padding: 0.75rem; margin-bottom: 1rem; font-size: 0.9rem }
+
+/* ── Skip link ───────────────────────────────────────────── */
+.pular-para-conteudo { position: absolute; left: -9999px; top: 0; background: var(--primaria-escura); color: #fff; padding: 0.6rem 1rem; font-weight: 600; z-index: 2000 }
+.pular-para-conteudo:focus { left: 0 }
+
+/* ── Explicação ──────────────────────────────────────────── */
+.explicacao { margin-top: 1.6rem; font-size: 0.97rem }
+.explicacao p { margin: 0.55rem 0 }
+
+/* ── Diagnóstico ─────────────────────────────────────────── */
+.diagnostico { margin: 1.2rem 0 0; border: 1px solid var(--borda); border-radius: var(--raio2); background: var(--superficie); padding: 0.6rem 0.9rem; font-size: 0.85rem }
+.diagnostico summary { cursor: pointer; font-weight: 600; color: var(--texto); user-select: none }
+.diagnostico-lista { display: grid; grid-template-columns: minmax(10rem, 1fr) 2fr; gap: 0.25rem 0.75rem; margin: 0.75rem 0 }
+.diagnostico-lista dt { color: var(--mutado) }
+.diagnostico-lista dd { margin: 0; font-weight: 600 }
+
+/* ── Utilidades de acessibilidade ────────────────────────── */
+.visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap }
+
+/* ── Tabelas fixas ───────────────────────────────────────── */
+.tabela-fixa { width: 100%; border-collapse: collapse; font-size: 0.9rem }
+.tabela-fixa th, .tabela-fixa td { text-align: left; padding: 0.45rem 0.5rem; border: 1px solid var(--borda) }
+.tabela-fixa th { font-weight: 600; color: var(--mutado); background: var(--superficie2) }
+
+/* ── Pagina de conteúdo longo ────────────────────────────── */
+.conteudo-longo { background: var(--superficie); border: 1px solid var(--borda); border-radius: var(--raio2); box-shadow: var(--sombra); padding: 1rem }
+.conteudo-longo h2 { margin-top: 1.4rem }
+.conteudo-longo p, .conteudo-longo li { font-size: 0.95rem }
+.conteudo-longo ul { padding-left: 1.2rem }
+
+/* ── Página 404 ──────────────────────────────────────────── */
+.pagina-404 { text-align: center; padding: 2.5rem 1rem }
+
+/* ── Vigência ────────────────────────────────────────────── */
+.vigencia { display: inline-block; font-size: 0.82rem; color: var(--mutado); background: var(--superficie); border: 1px solid var(--borda); border-radius: 999px; padding: 0.2rem 0.7rem; margin: 0 0 0.4rem }
+
+/* ── Anúncios ────────────────────────────────────────────── */
+.anuncio { font-size: 0.75rem; color: var(--mutado) }
+.anuncio-rotulo { display: block; margin-bottom: 0.2rem }
+.anuncio--resultado { margin-top: 1.2rem; min-height: 100px; background: var(--superficie); border: 1px solid var(--borda); border-radius: 8px; padding: 0.5rem }
+.anuncio--secundario { margin-top: 1.2rem; min-height: 60px; background: var(--superficie); border: 1px solid var(--borda); border-radius: 8px; padding: 0.4rem 0.5rem }
+
+/* ── Layout responsivo: calculadora desktop ──────────────── */
+@media (min-width: 900px) {
+  .pagina-calculadora { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 1.2rem; align-items: start }
+  h1 { font-size: 1.7rem }
+}
+
+/* ── Preferências do usuário ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important }
+}

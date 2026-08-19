@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+---
+<BaseLayout titulo="CLT vs PJ" descricao="Compare os rendimentos líquidos entre CLT e PJ" rota="/utilidades/clt-vs-pj/">
+  <nav class="trilha"><a href="/">Início</a> / <a href="/utilidades/">Utilidades</a> / <span>CLT vs PJ</span></nav>
+  <h1>CLT vs PJ</h1>
+  <p class="subtitulo">Estimativa simplificada de rendimento líquido mensal.</p>
+  
+  <form id="form-calculadora" class="formulario" novalidate>
+    <div class="campos">
+      <label class="campo">
+        Salário CLT (R$):
+        <input type="number" name="clt" step="0.01" required />
+      </label>
+      <label class="campo">
+        Proposta PJ (R$):
+        <input type="number" name="pj" step="0.01" required />
+      </label>
+    </div>
+    <button type="submit" class="botao">Calcular</button>
+  </form>
+  
+  <section id="resultado" class="resultado" aria-live="polite" hidden>
+    <h2 class="resultado-titulo">Comparativo</h2>
+    <div class="resultado-conteudo"></div>
+    <p class="resultado-nota">Estimativa educacional, sem valor legal. Descontos variáveis.</p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { linha, grupo, mostrarResultado } from '../../lib/resultado.ts'
+  import { moeda } from '../../lib/format.ts'
+  
+  const form = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const clt = parseFloat((form.elements.namedItem('clt') as HTMLInputElement).value)
+      const pj = parseFloat((form.elements.namedItem('pj') as HTMLInputElement).value)
+      
+      const cltLiquido = clt * 0.85 // Estimativa ~15% desconto (INSS+IRRF)
+      const pjLiquido = pj * 0.90 // Estimativa ~10% despesas/impostos
+      
+      let html = grupo('Valores Líquidos Estimados', [
+        linha('CLT', moeda(cltLiquido)),
+        linha('PJ', moeda(pjLiquido)),
+        linha('Diferença', moeda(pjLiquido - cltLiquido))
+      ])
+      mostrarResultado(html)
+    })
+  }
+</script>

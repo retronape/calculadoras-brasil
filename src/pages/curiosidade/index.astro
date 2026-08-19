@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+
+const curiosidades = [
+  { slug: 'fatos', titulo: 'Fatos Financeiros', descricao: 'Curiosidades que você não sabia sobre dinheiro.', icone: '💡' },
+  { slug: 'mapa-salarial', titulo: 'Mapa Salarial', descricao: 'Quanto ganha cada profissão no Brasil?', icone: '🗺️' },
+  { slug: 'mesada', titulo: 'Simulador de Mesada', descricao: 'Quanto guardar por mês pra uma criança?', icone: '🧓' },
+  { slug: 'quanto-vale-sua-vida', titulo: 'Quanto Vale Sua Vida?', descricao: 'Calcule o valor total da sua vida financeira.', icone: '💰' },
+  { slug: 'quiz-dinheiro', titulo: 'Quiz de Dinheiro', descricao: 'Teste seus conhecimentos sobre finanças.', icone: '❓' }
+]
+---
+
+<BaseLayout titulo="Curiosidades" descricao="Aprenda sobre finanças de forma divertida." rota="/curiosidade/">
+  <section class="hero">
+    <h1>Curiosidades</h1>
+    <p class="subtitulo">Aprenda sobre finanças de forma divertida.</p>
+  </section>
+
+  <ul class="grade-calculadoras">
+    {curiosidades.map((c) => (
+      <li>
+        <a class="cartao" href={'/curiosidade/' + c.slug + '/'} data-categoria="curiosidade">
+          <div class="cartao-topo">
+            <span class="cartao-icone">{c.icone}</span>
+            <span class="cartao-etiqueta">Curiosidade</span>
+          </div>
+          <h3>{c.titulo}</h3>
+          <p>{c.descricao}</p>
+        </a>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+---
+<BaseLayout titulo="Rastreador de Inflação" descricao="Calcule o impacto da inflação no poder de compra" rota="/utilidades/rastreador-inflacao/">
+  <nav class="trilha"><a href="/">Início</a> / <a href="/utilidades/">Utilidades</a> / <span>Rastreador de Inflação</span></nav>
+  <h1>Rastreador de Inflação</h1>
+  <p class="subtitulo">Veja quanto valeria um valor antigo hoje.</p>
+  
+  <form id="form-calculadora" class="formulario" novalidate>
+    <div class="campos">
+      <label class="campo">
+        Valor Inicial (R$):
+        <input type="number" name="valor" step="0.01" required />
+      </label>
+      <label class="campo">
+        Ano de Referência:
+        <select name="ano">
+          {Array.from({length: 16}, (_, i) => 2010 + i).map(ano => <option value={ano}>{ano}</option>)}
+        </select>
+      </label>
+    </div>
+    <button type="submit" class="botao">Calcular</button>
+  </form>
+  
+  <section id="resultado" class="resultado" aria-live="polite" hidden>
+    <h2 class="resultado-titulo">Resultado</h2>
+    <div class="resultado-conteudo"></div>
+    <p class="resultado-nota">Estimativa baseada em IPCA acumulado aproximado.</p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { linha, grupo, mostrarResultado } from '../../lib/resultado.ts'
+  import { moeda } from '../../lib/format.ts'
+  
+  const form = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const valor = parseFloat((form.elements.namedItem('valor') as HTMLInputElement).value)
+      const ano = parseInt((form.elements.namedItem('ano') as HTMLInputElement).value)
+      
+      // Inflação acumulada fictícia simples por ano (ex: 5% a.a.)
+      const anosPassados = 2025 - ano
+      const valorAtual = valor * Math.pow(1.05, anosPassados)
+      
+      let html = grupo('Poder de Compra', [
+        linha('Valor equivalente hoje', moeda(valorAtual))
+      ])
+      mostrarResultado(html)
+    })
+  }
+</script>

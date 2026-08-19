@@ -1,0 +1,48 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro'
+import CampoFormulario from '../componentes/CampoFormulario.astro'
+import { tabelas } from '../lib/tabelas.ts'
+
+const { meta } = Astro.props
+---
+
+<CalculatorLayout meta={meta}>
+  <CampoFormulario nome="salario" rotulo="Salário Mensal (R$)" tipo="number" prefixo="R$" min="0" step="0.01" inputmode="decimal" obrigatorio />
+  <CampoFormulario nome="horas50" rotulo="Horas Extras 50% (quantidade)" tipo="number" min="0" step="0.5" valor="0" />
+  <CampoFormulario nome="horas100" rotulo="Horas Extras 100% (quantidade)" tipo="number" min="0" step="0.5" valor="0" />
+</CalculatorLayout>
+
+<script>
+  import { horasExtras } from '../lib/tributos.ts'
+  import { tabelas } from '../lib/tabelas.ts'
+  import { moeda, parseNumero, percentual } from '../lib/format.ts'
+  import { mostrarResultado, mostrarErro, linha, grupo, campoValor } from '../lib/resultado.ts'
+
+  const formulario = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (formulario) {
+    formulario.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const salario = parseNumero(campoValor(formulario, 'salario'))
+      const horas50 = parseNumero(campoValor(formulario, 'horas50') || '0')
+      const horas100 = parseNumero(campoValor(formulario, 'horas100') || '0')
+
+      if (!salario || salario <= 0) {
+        mostrarErro('Informe o salário mensal.')
+        return
+      }
+
+      const r = horasExtras({ salario, horas50, horas100 })
+
+      mostrarResultado(
+        grupo('Horas Extras', [
+          linha('Valor da Hora Normal', moeda(r.valorHoraNormal)),
+          linha('Valor Hora 50% (adicional)', moeda(r.valorHora50)),
+          linha('Valor Hora 100% (adicional)', moeda(r.valorHora100)),
+          linha('Total Horas 50%', moeda(r.total50)),
+          linha('Total Horas 100%', moeda(r.total100)),
+          linha('Total a Receber', moeda(r.totalGeral), 'total')
+        ])
+      )
+    })
+  }
+</script>

@@ -1,0 +1,49 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro'
+import CampoFormulario from '../componentes/CampoFormulario.astro'
+import { tabelas } from '../lib/tabelas.ts'
+
+const { meta } = Astro.props
+---
+
+<CalculatorLayout meta={meta}>
+  <CampoFormulario nome="salarioAtual" rotulo="Média Salarial Atual (R$)" tipo="number" prefixo="R$" min="0" step="0.01" inputmode="decimal" obrigatorio />
+  <CampoFormulario nome="tempoContribuicao" rotulo="Anos de Contribuição" tipo="number" min="0" valor="0" />
+  <CampoFormulario nome="idadeAtual" rotulo="Idade Atual" tipo="number" min="18" max="100" valor="30" />
+  <CampoFormulario nome="sexo" rotulo="Sexo" tipo="select" opcoes={[{valor: 'M', rotulo: 'Masculino'}, {valor: 'F', rotulo: 'Feminino'}]} valor="M" />
+</CalculatorLayout>
+
+<script>
+  import { simularAposentadoria } from '../lib/tributos.ts'
+  import { tabelas } from '../lib/tabelas.ts'
+  import { moeda, parseNumero } from '../lib/format.ts'
+  import { mostrarResultado, mostrarErro, linha, grupo, campoValor } from '../lib/resultado.ts'
+
+  const formulario = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (formulario) {
+    formulario.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const salarioAtual = parseNumero(campoValor(formulario, 'salarioAtual'))
+      const tempoContribuicao = parseInt(campoValor(formulario, 'tempoContribuicao') || '0')
+      const idadeAtual = parseInt(campoValor(formulario, 'idadeAtual') || '30')
+      const sexo = (campoValor(formulario, 'sexo') || 'M') as 'M' | 'F'
+
+      if (!salarioAtual || salarioAtual <= 0) {
+        mostrarErro('Informe a média salarial atual.')
+        return
+      }
+
+      const r = simularAposentadoria({ salarioAtual, tempoContribuicao, idadeAtual, sexo }, tabelas)
+
+      mostrarResultado(
+        grupo('Simulação de Aposentadoria — ' + (r.idadeMinima === 62 ? 'Regra Geral (Mulher)' : 'Regra Geral (Homem)'), [
+          linha('Idade mínima para aposentadoria', String(r.idadeMinima) + ' anos'),
+          linha('Tempo mínimo de contribuição', String(r.tempoMinimoContribuicao) + ' anos'),
+          linha('Tempo restante', String(r.tempoRestante) + ' anos'),
+          linha('Idade estimada de aposentadoria', String(r.idadeAposentadoria) + ' anos'),
+          linha('Benefício estimado (85% da média)', moeda(r.valorEstimado), 'total')
+        ])
+      )
+    })
+  }
+</script>

@@ -1,0 +1,42 @@
+---
+import { calculadoras } from '../../calculadoras/registry.ts'
+import SalarioLiquido from '../../calculadoras/salario-liquido-clt.astro'
+import Inss from '../../calculadoras/inss.astro'
+import IrpfAnual from '../../calculadoras/irpf-anual.astro'
+import Fgts from '../../calculadoras/fgts.astro'
+import NotaParaPassar from '../../calculadoras/nota-para-passar.astro'
+import RendimentoInvestimentos from '../../calculadoras/rendimento-investimentos.astro'
+import RescisaoTrabalhista from '../../calculadoras/rescisao-trabalhista.astro'
+import HorasExtras from '../../calculadoras/horas-extras.astro'
+import DecimoTerceiro from '../../calculadoras/decimo-terceiro.astro'
+import Ferias from '../../calculadoras/ferias.astro'
+import Aposentadoria from '../../calculadoras/aposentadoria.astro'
+import Inflacao from '../../calculadoras/inflacao.astro'
+import Financiamento from '../../calculadoras/financiamento.astro'
+import CartaoCredito from '../../calculadoras/cartao-credito.astro'
+import Iof from '../../calculadoras/iof.astro'
+
+export function getStaticPaths() {
+  return calculadoras.map(function (c) {
+    return { params: { slug: c.slug }, props: { meta: c.meta } }
+  })
+}
+
+const { meta } = Astro.props
+---
+
+{meta.slug === 'salario-liquido-clt' && <SalarioLiquido meta={meta} />}
+{meta.slug === 'inss' && <Inss meta={meta} />}
+{meta.slug === 'irpf-anual' && <IrpfAnual meta={meta} />}
+{meta.slug === 'fgts' && <Fgts meta={meta} />}
+{meta.slug === 'nota-para-passar' && <NotaParaPassar meta={meta} />}
+{meta.slug === 'rendimento-investimentos' && <RendimentoInvestimentos meta={meta} />}
+{meta.slug === 'rescisao-trabalhista' && <RescisaoTrabalhista meta={meta} />}
+{meta.slug === 'horas-extras' && <HorasExtras meta={meta} />}
+{meta.slug === 'decimo-terceiro' && <DecimoTerceiro meta={meta} />}
+{meta.slug === 'ferias' && <Ferias meta={meta} />}
+{meta.slug === 'aposentadoria' && <Aposentadoria meta={meta} />}
+{meta.slug === 'inflacao' && <Inflacao meta={meta} />}
+{meta.slug === 'financiamento' && <Financiamento meta={meta} />}
+{meta.slug === 'cartao-credito' && <CartaoCredito meta={meta} />}
+{meta.slug === 'iof' && <Iof meta={meta} />}

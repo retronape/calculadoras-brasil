@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+
+const utilidades = [
+  { slug: 'calendario-clt', titulo: 'Calendário CLT', descricao: 'Veja seus próximos direitos: 13º, férias, feriados.', icone: '📅' },
+  { slug: 'conversor-salario', titulo: 'Conversor de salário', descricao: 'Salário mensal → hora, dia, semana, ano.', icone: '💰' },
+  { slug: 'clt-vs-pj', titulo: 'CLT vs PJ', descricao: 'Compare lado a lado qual escolher.', icone: '⚖️' },
+  { slug: 'conversor-moedas', titulo: 'Conversor de moedas', descricao: 'BRL ↔ USD/EUR com taxas aproximadas.', icone: '💱' },
+  { slug: 'linha-do-tempo', titulo: 'Linha do tempo financeira', descricao: 'Projeção de quanto teria guardando X por mês.', icone: '📈' },
+  { slug: 'tempo-de-trabalho', titulo: 'Tempo de trabalho', descricao: 'Quanto tempo pra comprar um celular, carro, casa?', icone: '⏱️' },
+  { slug: 'perfil-financeiro', titulo: 'Perfil financeiro', descricao: 'Quiz: qual seu estilo financeiro?', icone: '🧠' },
+  { slug: 'rastreador-inflacao', titulo: 'Rastreador de inflação', descricao: 'Quanto valia R$100 em 2010 vs hoje?', icone: '📊' }
+]
+---
+
+<BaseLayout titulo="Utilidades" descricao="Ferramentas práticas para o dia a dia." rota="/utilidades/">
+  <section class="hero">
+    <h1>Utilidades</h1>
+    <p class="subtitulo">Ferramentas que vão além das calculadoras.</p>
+  </section>
+
+  <h2>Ferramentas</h2>
+  <ul class="grade-calculadoras">
+    {utilidades.map((u) => (
+      <li>
+        <a class="cartao" href={'/utilidades/' + u.slug + '/'} data-categoria="utilidade">
+          <div class="cartao-topo">
+            <span class="cartao-icone">{u.icone}</span>
+            <span class="cartao-etiqueta">Utilidade</span>
+          </div>
+          <h3>{u.titulo}</h3>
+          <p>{u.descricao}</p>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <section class="explicacao">
+    <h2>Sobre</h2>
+    <p>Estas ferramentas são <strong>educacionais e informativas</strong>. Consulte sempre um profissional antes de decisões financeiras.</p>
+  </section>
+</BaseLayout>

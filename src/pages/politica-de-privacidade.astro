@@ -1,0 +1,129 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { siteConfig } from '../config/site.ts'
+---
+
+<BaseLayout
+  titulo="Política de Privacidade"
+  descricao="Como o BrasilCalcula trata seus dados. Nenhum dado sai do seu dispositivo."
+  rota="/politica-de-privacidade/"
+>
+  <section class="hero">
+    <h1>Política de Privacidade</h1>
+    <p class="subtitulo">Transparência total sobre como seus dados são tratados.</p>
+  </section>
+
+  <p class="ultima-atualizacao">Última atualização: 15 de agosto de 2026.</p>
+
+  <section class="conteudo-estatico">
+    <h2>1. Resumo</h2>
+    <p>
+      O <strong>{siteConfig.nome}</strong> foi projetado para proteger sua privacidade.
+      Todas as contas e cálculos são feitos inteiramente <strong>no seu navegador</strong>.
+      Nenhum dado pessoal ou financeiro é enviado a servidores externos.
+    </p>
+
+    <h2>2. Dados que NÃO coletamos</h2>
+    <ul>
+      <li>Nome, e-mail ou qualquer dado de cadastro</li>
+      <li>Valores de salários, cálculos ou simulações</li>
+      <li>Dados de localização</li>
+      <li>Histórico de cálculos (não temos acesso)</li>
+    </ul>
+
+    <h2>3. Como os cálculos funcionam</h2>
+    <p>
+      Todos os cálculos são executados em JavaScript, diretamente no navegador do usuário.
+      Os valores inseridos nos formulários <strong>nunca são enviados</strong> para qualquer servidor.
+      Os resultados são exibidos na tela e descartados ao fechar a página.
+    </p>
+
+    <h2>4. Armazenamento local (localStorage)</h2>
+    <p>
+      O site utiliza o <code>localStorage</code> do navegador para salvar suas preferências:
+    </p>
+    <ul>
+      <li><strong>Tema</strong> (claro/escuro)</li>
+      <li><strong>Modo visual</strong> (leve, padrão, rico, máximo)</li>
+      <li><strong>Preferência de anúncios</strong> (consentimento)</li>
+    </ul>
+    <p>
+      Esses dados ficam exclusivamente no seu dispositivo e nunca são transmitidos a terceiros.
+      Você pode apagá-los a qualquer momento limpando os dados do navegador.
+    </p>
+
+    <h2>5. Google AdSense</h2>
+    <p>
+      O {siteConfig.nome} utiliza o <strong>Google AdSense</strong> para exibir anúncios que mantêm o site gratuito.
+    </p>
+    <ul>
+      <li>O AdSense pode usar cookies para personalizar anúncios, se você aceitar.</li>
+      <li>Você pode escolher entre anúncios personalizados ou apenas não personalizados.</li>
+      <li>O AdSense coleta dados de navegação (não dados dos seus cálculos).</li>
+      <li>Você pode gerenciar suas preferências em <a href="https://adssettings.google.com/" rel="noopener" target="_blank">Configurações de Anúncios do Google</a>.</li>
+    </ul>
+
+    <h2>6. Cookies</h2>
+    <p>Utilizamos cookies apenas para:</p>
+    <ul>
+      <li>Consentimento de anúncios (Google AdSense)</li>
+      <li>Funcionamento básico do tema e preferências</li>
+    </ul>
+    <p>
+      Não utilizamos cookies de rastreamento, analytics próprios ou cookies de terceiros além do AdSense.
+    </p>
+
+    <h2>7. Links para terceiros</h2>
+    <p>
+      O site pode conter links para sites externos (como o GitHub).
+      O {siteConfig.nome} não se responsabiliza pelas políticas de privacidade desses sites.
+    </p>
+
+    <h2>8. Crianças</h2>
+    <p>
+      O site não é direcionado a menores de 13 anos e não coleta dados de crianças propositalmente.
+    </p>
+
+    <h2>9. Alterações nesta política</h2>
+    <p>
+      Eventuais alterações serão publicadas nesta página com a data de atualização revisada.
+      Recomendamos verificar periodicamente.
+    </p>
+
+    <h2>10. Contato</h2>
+    <p>
+      Em caso de dúvidas, entre em contato via <a href={`mailto:${siteConfig.emailContato}`}>{siteConfig.emailContato}</a>.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .ultima-atualizacao {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+  }
+  .conteudo-estatico h2 {
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  .conteudo-estatico p {
+    margin-bottom: 0.75rem;
+  }
+  .conteudo-estatico ul {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+  }
+  .conteudo-estatico li {
+    margin-bottom: 0.3rem;
+  }
+  .conteudo-estatico code {
+    background: #f1f5f9;
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    font-size: 0.88rem;
+  }
+  [data-tema="dark"] .conteudo-estatico code {
+    background: #1e293b;
+  }
+</style>

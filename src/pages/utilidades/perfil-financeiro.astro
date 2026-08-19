@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+---
+<BaseLayout titulo="Perfil Financeiro" descricao="Descubra seu perfil de investidor" rota="/utilidades/perfil-financeiro/">
+  <nav class="trilha"><a href="/">Início</a> / <a href="/utilidades/">Utilidades</a> / <span>Perfil Financeiro</span></nav>
+  <h1>Perfil Financeiro</h1>
+  <p class="subtitulo">Responda e descubra se você é conservador, moderado ou arrojado.</p>
+  
+  <form id="form-calculadora" class="formulario" novalidate>
+    <div class="campos">
+      <label class="campo">
+        1. Como você guarda seu dinheiro?
+        <select name="q1">
+          <option value="0">Só em poupança</option>
+          <option value="1">Poupança e CDB</option>
+          <option value="2">Fundos e Ações</option>
+          <option value="3">Cripto e Derivativos</option>
+        </select>
+      </label>
+      <label class="campo">
+        2. Quanto tempo pode deixar o dinheiro investido?
+        <select name="q2">
+          <option value="0">Nunca preciso</option>
+          <option value="1">Alguns meses</option>
+          <option value="2">Poucos anos</option>
+          <option value="3">Mais de 5 anos</option>
+        </select>
+      </label>
+      <label class="campo">
+        3. Como reage em quedas do mercado?
+        <select name="q3">
+          <option value="0">Vendo tudo</option>
+          <option value="1">Fico nervoso</option>
+          <option value="2">Aguento</option>
+          <option value="3">Compro mais</option>
+        </select>
+      </label>
+      <label class="campo">
+        4. Qual seu objetivo principal?
+        <select name="q4">
+          <option value="0">Segurança</option>
+          <option value="1">Renda extra</option>
+          <option value="2">Crescimento</option>
+          <option value="3">Liberdade financeira</option>
+        </select>
+      </label>
+      <label class="campo">
+        5. Qual sua reserva de emergência?
+        <select name="q5">
+          <option value="0">Nenhuma</option>
+          <option value="1">Poucos meses</option>
+          <option value="2">1 ano</option>
+          <option value="3">Mais de 1 ano</option>
+        </select>
+      </label>
+      <label class="campo">
+        6. O que você faria com um prêmio?
+        <select name="q6">
+          <option value="0">Guardar no banco</option>
+          <option value="1">Investir em renda fixa</option>
+          <option value="2">Comprar ações</option>
+          <option value="3">Investir em moedas digitais</option>
+        </select>
+      </label>
+      <label class="campo">
+        7. Conhece sobre investimentos?
+        <select name="q7">
+          <option value="0">Nada</option>
+          <option value="1">Básico</option>
+          <option value="2">Intermediário</option>
+          <option value="3">Avançado</option>
+        </select>
+      </label>
+      <label class="campo">
+        8. Quanto do seu salário você investe?
+        <select name="q8">
+          <option value="0">Nada</option>
+          <option value="1">Até 10%</option>
+          <option value="2">Até 25%</option>
+          <option value="3">Mais de 25%</option>
+        </select>
+      </label>
+    </div>
+    <button type="submit" class="botao">Descobrir Perfil</button>
+  </form>
+  
+  <section id="resultado" class="resultado" aria-live="polite" hidden>
+    <h2 class="resultado-titulo">Seu Perfil</h2>
+    <div class="resultado-conteudo"></div>
+    <p class="resultado-nota">Estimativa educacional, sem valor legal.</p>
+  </section>
+</BaseLayout>
+
+<script>
+  import { grupo, mostrarResultado } from '../../lib/resultado.ts'
+  
+  const form = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault()
+      let score = 0
+      for(let i=1; i<=8; i++) {
+        score += parseInt((form.elements.namedItem(`q${i}`) as HTMLSelectElement).value)
+      }
+      
+      let perfil = 'Conservador'
+      if(score > 4 && score <= 8) perfil = 'Moderado'
+      if(score > 8) perfil = 'Arrojado'
+      
+      localStorage.setItem('perfilFinanceiro', perfil)
+      
+      let html = grupo('Análise', [
+        `<p>Seu perfil é: <strong>${perfil}</strong></p>`
+      ])
+      mostrarResultado(html)
+    })
+  }
+</script>

@@ -1,0 +1,82 @@
+---
+import CalculatorLayout from '../layouts/CalculatorLayout.astro'
+import CampoFormulario from '../componentes/CampoFormulario.astro'
+import { tabelas } from '../lib/tabelas.ts'
+
+const { meta } = Astro.props
+---
+
+<CalculatorLayout meta={meta}>
+  <CampoFormulario nome="inicial" rotulo="Investimento Inicial (R$)" tipo="number" prefixo="R$" min="0" step="0.01" inputmode="decimal" obrigatorio />
+  <CampoFormulario nome="aporte" rotulo="Aporte Mensal (R$)" tipo="number" prefixo="R$" min="0" step="0.01" valor="500" />
+  <CampoFormulario nome="meses" rotulo="Prazo (meses)" tipo="number" min="1" max="600" valor="60" />
+  <CampoFormulario nome="taxaMensal" rotulo="Taxa mensal (%)" tipo="number" min="0" step="0.01" valor="1.24" ajuda="CDI ~14,90% a.a. ≈ 1,24% a.m." />
+  <CampoFormulario nome="aliquotaIr" rotulo="Alíquota IR sobre rendimentos (%)" tipo="number" min="0" max="30" step="0.1" valor="17.5" />
+</CalculatorLayout>
+
+<div id="taxa-ao-vivo" style="font-size:0.82rem;color:var(--mutado);margin-top:0.5rem;"></div>
+
+<script>
+  import { simular } from '../lib/investimentos.ts'
+  import { moeda, parseNumero, percentual } from '../lib/format.ts'
+  import { mostrarResultado, mostrarErro, linha, grupo, campoValor } from '../lib/resultado.ts'
+  import { obterDadosComBackground } from '../lib/tempo-real.ts'
+
+  // Busca CDI/Selic em tempo real e sugere no campo
+  obterDadosComBackground().then((dados) => {
+    if (!dados) return
+    const cdiMensal = Math.pow(1 + dados.cdi.valor / 100, 1 / 12) - 1
+    const cdiPercentual = (cdiMensal * 100).toFixed(2)
+    const statusEl = document.getElementById('taxa-ao-vivo')
+    if (statusEl) {
+      const fonte = dados.cdi.fonte === 'api' ? 'ao vivo do BCB' : 'fallback'
+      statusEl.innerHTML = '📡 CDI atual: ' + dados.cdi.valor.toFixed(2) + '% a.a. (' + cdiPercentual + '% a.m.) · Fonte: ' + fonte
+      statusEl.style.color = dados.todosAoVivo ? 'var(--verde)' : 'var(--amber)'
+    }
+    // Atualiza o campo de taxa automaticamente
+    const campoTaxa = document.querySelector<HTMLInputElement>('[name="taxaMensal"]')
+    if (campoTaxa && !campoTaxa.dataset.tocado) {
+      campoTaxa.value = cdiPercentual
+    }
+  }).catch(() => {})
+
+  // Marca quando o usuário edita manualmente o campo de taxa
+  const campoTaxa = document.querySelector<HTMLInputElement>('[name="taxaMensal"]')
+  campoTaxa?.addEventListener('input', () => { campoTaxa.dataset.tocado = '1' })
+
+  const formulario = document.getElementById('form-calculadora') as HTMLFormElement | null
+  if (formulario) {
+    formulario.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const inicial = parseNumero(campoValor(formulario, 'inicial'))
+      const aporteMensal = parseNumero(campoValor(formulario, 'aporte') || '0')
+      const meses = parseInt(campoValor(formulario, 'meses') || '60')
+      const taxaMensal = parseNumero(campoValor(formulario, 'taxaMensal') || '1.24') / 100
+      const aliquotaIr = parseNumero(campoValor(formulario, 'aliquotaIr') || '17.5')
+
+      if (!inicial || inicial <= 0) {
+        mostrarErro('Informe o investimento inicial.')
+        return
+      }
+
+      const resultado = simular({ inicial, aporteMensal, meses, taxaMensal, aliquotaIr })
+      const taxaAnual = Math.pow(1 + taxaMensal, 12) - 1
+
+      mostrarResultado(
+        grupo('Investimento', [
+          linha('Total aportado', moeda(resultado.totalAportado)),
+          linha('Rendimento bruto', moeda(resultado.juros)),
+          linha('IR sobre rendimento', moeda(resultado.ir)),
+          linha('Rendimento líquido', moeda(resultado.juros - resultado.ir)),
+          linha('Saldo final bruto', moeda(resultado.bruto)),
+          linha('Saldo final líquido', moeda(resultado.liquido), 'total')
+        ]) +
+        grupo('Taxas', [
+          linha('Rentabilidade mensal', percentual(resultado.taxaMensal)),
+          linha('Rentabilidade anual', percentual(taxaAnual * 100)),
+          linha('Alíquota IR', percentual(aliquotaIr))
+        ])
+      )
+    })
+  }
+</script>
