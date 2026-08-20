@@ -207,6 +207,52 @@ export const itensPesquisa: ItemPesquisa[] = [
     slug: '/curiosidade/quiz-dinheiro/',
     categoria: 'curiosidade',
     palavrasChave: ['quiz', 'dinheiro', 'conhecimento', 'teste', 'perguntas', 'respostas', 'financas']
+  },
+
+  // ── Calculadoras de estudos ─────────────────────────────
+  {
+    titulo: 'Simulador ENEM',
+    descricao: 'Simule sua nota no ENEM e compare com notas de corte.',
+    slug: '/calculadora/simulador-enem/',
+    categoria: 'calculadora',
+    palavrasChave: ['enem', 'nota', 'vestibular', 'universidade', 'simulador', 'corte', 'media', 'prova', 'fuvest', 'unicamp']
+  },
+  {
+    titulo: 'Bolsa de Estudos',
+    descricao: 'Calcule o valor da bolsa de estudos com base na sua renda familiar.',
+    slug: '/calculadora/bolsa-estudos/',
+    categoria: 'calculadora',
+    palavrasChave: ['bolsa', 'estudos', 'renda', 'familiar', 'per capita', 'prouni', 'sisu', 'faculdade', 'universidade']
+  },
+
+  // ── Utilidades de estudos ──────────────────────────────
+  {
+    titulo: 'Orçamento Estudantil',
+    descricao: 'Planeje suas finanças como estudante.',
+    slug: '/utilidades/orcamento-estudantil/',
+    categoria: 'utilidade',
+    palavrasChave: ['orcamento', 'estudante', 'financas', 'planejar', 'gasto', 'renda', 'despesa']
+  },
+  {
+    titulo: 'Plano de Estudos',
+    descricao: 'Organize seus horários de estudos e aumente sua produtividade.',
+    slug: '/utilidades/plano-estudos/',
+    categoria: 'utilidade',
+    palavrasChave: ['plano', 'estudos', 'horario', 'produtividade', 'pomodoro', 'materia', 'estudar']
+  },
+  {
+    titulo: 'Comparador de Cursos',
+    descricao: 'Compare diferentes cursos e universidades.',
+    slug: '/utilidades/comparador-cursos/',
+    categoria: 'utilidade',
+    palavrasChave: ['comparador', 'cursos', 'universidade', 'faculdade', 'duracao', 'mensalidade', 'custo']
+  },
+  {
+    titulo: 'Tracker de Estudos',
+    descricao: 'Acompanhe seu progresso nos estudos e mantenha a consistência.',
+    slug: '/utilidades/tracker-estudos/',
+    categoria: 'utilidade',
+    palavrasChave: ['tracker', 'progresso', 'estudos', 'historico', 'horas', 'materias', 'estudar']
   }
 ]
 
