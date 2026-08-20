@@ -9,6 +9,8 @@ import SeletorModo from '../componentes/SeletorModo.astro'
 import DiagnosticoNivel from '../componentes/DiagnosticoNivel.astro'
 import PesquisaModal from '../componentes/PesquisaModal.astro'
 
+const isDev = import.meta.env.DEV
+
 interface Props { titulo: string; descricao: string; rota?: string }
 
 const { titulo, descricao, rota } = Astro.props
@@ -216,8 +218,8 @@ const tituloPagina = titulo.includes(siteConfig.nome) ? titulo : titulo + ' · '
           <a href="/politica-de-privacidade/">Privacidade</a>
           <a href="/termos-de-uso/">Termos de Uso</a>
           <a href="/avisos-legais/">Avisos Legais</a>
-          <a href={'mailto:' + siteConfig.emailContato}>{siteConfig.emailContato}</a>
-          <button type="button" class="rodape-link" data-abrir-diagnostico>Diagnóstico</button>
+          <a href="#" id="contato-link" data-user="gabriel58392626" data-domain="gmail.com">Contato</a>
+          {import.meta.env.DEV && <button type="button" class="rodape-link" data-abrir-diagnostico>Diagnóstico</button>}
         </div>
         <p class="rodape-meta">
           © {new Date().getFullYear()} {siteConfig.nome} · Independente.
@@ -225,7 +227,7 @@ const tituloPagina = titulo.includes(siteConfig.nome) ? titulo : titulo + ' · '
         </p>
       </div>
       <div class="container">
-        <DiagnosticoNivel />
+        {isDev && <DiagnosticoNivel />}
       </div>
     </footer>
 
@@ -246,6 +248,17 @@ const tituloPagina = titulo.includes(siteConfig.nome) ? titulo : titulo + ' · '
       import { ler, salvar } from '../lib/storage.ts'
 
       const doc = document.documentElement
+
+      // Construir email de contato (proteção contra scrapers)
+      const contatoLink = document.getElementById('contato-link') as HTMLAnchorElement | null
+      if (contatoLink) {
+        const user = contatoLink.getAttribute('data-user')
+        const domain = contatoLink.getAttribute('data-domain')
+        if (user && domain) {
+          contatoLink.href = 'mailto:' + user + '@' + domain
+          contatoLink.textContent = user + '@' + domain
+        }
+      }
 
       // Alternar tema
       try {

@@ -5,7 +5,7 @@ import { siteConfig } from '../config/site.ts'
 
 <BaseLayout
   titulo="Política de Privacidade"
-  descricao="Como o BrasilCalcula trata seus dados. Nenhum dado sai do seu dispositivo."
+  descricao="Como o BrasilCalcula trata seus dados. Seus cálculos ficam no seu navegador; anúncios podem coletar dados conforme explicado abaixo."
   rota="/politica-de-privacidade/"
 >
   <section class="hero">
@@ -20,7 +20,10 @@ import { siteConfig } from '../config/site.ts'
     <p>
       O <strong>{siteConfig.nome}</strong> foi projetado para proteger sua privacidade.
       Todas as contas e cálculos são feitos inteiramente <strong>no seu navegador</strong>.
-      Nenhum dado pessoal ou financeiro é enviado a servidores externos.
+      Os valores que você digita nos formulários <strong>nunca são enviados</strong> a servidores do BrasilCalcula — não temos servidores e não coletamos dados de cálculos.
+    </p>
+    <p>
+      Entretanto, o site exibe anúncios por meio do <strong>Google AdSense</strong>, que pode coletar dados conforme sua própria política de privacidade (endereço IP, cookies, identificadores de dispositivos, páginas visitadas). Esses dados são coletados pelo Google, não pelo BrasilCalcula.
     </p>
 
     <h2>2. Dados que NÃO coletamos</h2>
@@ -55,11 +58,21 @@ import { siteConfig } from '../config/site.ts'
     <h2>5. Google AdSense</h2>
     <p>
       O {siteConfig.nome} utiliza o <strong>Google AdSense</strong> para exibir anúncios que mantêm o site gratuito.
+      O Google pode coletar automaticamente os seguintes dados quando você visita o site:
     </p>
     <ul>
-      <li>O AdSense pode usar cookies para personalizar anúncios, se você aceitar.</li>
+      <li>Endereço IP</li>
+      <li>Tipo de navegador e sistema operacional</li>
+      <li>Cookies e identificadores de publicidade</li>
+      <li>Páginas visitadas e tempo de permanência</li>
+    </ul>
+    <p>
+      Esses dados são coletados e processados pelo Google conforme a
+      <a href="https://policies.google.com/privacy" rel="noopener" target="_blank">Política de Privacidade do Google</a>.
+      O BrasilCalcula <strong>não tem acesso</strong> a esses dados individuais.
+    </p>
+    <ul>
       <li>Você pode escolher entre anúncios personalizados ou apenas não personalizados.</li>
-      <li>O AdSense coleta dados de navegação (não dados dos seus cálculos).</li>
       <li>Você pode gerenciar suas preferências em <a href="https://adssettings.google.com/" rel="noopener" target="_blank">Configurações de Anúncios do Google</a>.</li>
     </ul>
 
@@ -92,7 +105,7 @@ import { siteConfig } from '../config/site.ts'
 
     <h2>10. Contato</h2>
     <p>
-      Em caso de dúvidas, entre em contato via <a href={`mailto:${siteConfig.emailContato}`}>{siteConfig.emailContato}</a>.
+      Em caso de dúvidas, entre em contato via <a href="#" id="contato-link" data-user="gabriel58392626" data-domain="gmail.com">contato</a>.
     </p>
   </section>
 </BaseLayout>

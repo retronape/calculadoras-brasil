@@ -2,7 +2,7 @@ export const siteConfig = {
   nome: 'BrasilCalcula',
   marcaCurta: 'BrasilCalcula',
   tagline: 'Calculadoras práticas e confiáveis para brasileiros.',
-  url: 'https://calculadoras-brasil-two.vercel.app',
+  url: 'https://brasildcalcula.vercel.app',
   emailContato: 'gabriel58392626@gmail.com',
   githubUrl: 'https://github.com/retronape/calculadoras-brasil',
   adsense: {
