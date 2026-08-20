@@ -218,7 +218,7 @@ const tituloPagina = titulo.includes(siteConfig.nome) ? titulo : titulo + ' · '
           <a href="/politica-de-privacidade/">Privacidade</a>
           <a href="/termos-de-uso/">Termos de Uso</a>
           <a href="/avisos-legais/">Avisos Legais</a>
-          <a href="#" id="contato-link" data-user="gabriel58392626" data-domain="gmail.com">Contato</a>
+          <a href="#" class="contato-link" data-user="gabriel58392626" data-domain="gmail.com">Contato</a>
           {import.meta.env.DEV && <button type="button" class="rodape-link" data-abrir-diagnostico>Diagnóstico</button>}
         </div>
         <p class="rodape-meta">
@@ -250,15 +250,14 @@ const tituloPagina = titulo.includes(siteConfig.nome) ? titulo : titulo + ' · '
       const doc = document.documentElement
 
       // Construir email de contato (proteção contra scrapers)
-      const contatoLink = document.getElementById('contato-link') as HTMLAnchorElement | null
-      if (contatoLink) {
-        const user = contatoLink.getAttribute('data-user')
-        const domain = contatoLink.getAttribute('data-domain')
+      document.querySelectorAll<HTMLAnchorElement>('.contato-link').forEach((el) => {
+        const user = el.getAttribute('data-user')
+        const domain = el.getAttribute('data-domain')
         if (user && domain) {
-          contatoLink.href = 'mailto:' + user + '@' + domain
-          contatoLink.textContent = user + '@' + domain
+          el.href = 'mailto:' + user + '@' + domain
+          el.textContent = user + '@' + domain
         }
-      }
+      })
 
       // Alternar tema
       try {
