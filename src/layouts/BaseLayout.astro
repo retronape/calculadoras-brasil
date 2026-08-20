@@ -85,11 +85,24 @@ const tituloPagina = titulo.includes(siteConfig.nome) ? titulo : titulo + ' · '
 
         // Tema (padrão: escuro)
         var tema = pegar('tema')
-        console.log('[DEBUG] Tema recuperado:', tema)
-        if (tema !== 'light') tema = 'dark'
+        console.log('[DEBUG] Tema recuperado da persistência:', tema)
+        
+        if (tema !== 'light') {
+            console.log('[DEBUG] Tema não é "light", definindo como "dark"')
+            tema = 'dark'
+        } else {
+            console.log('[DEBUG] Tema é "light"')
+        }
+        
         d.setAttribute('data-tema', tema)
+        console.log('[DEBUG] data-tema definido como:', tema)
+        
         var meta = document.querySelector('meta[name="theme-color"]')
-        if (meta) meta.setAttribute('content', tema === 'dark' ? '#050a13' : '#eef3fb')
+        if (meta) {
+            var novaCor = (tema === 'dark' ? '#050a13' : '#eef3fb')
+            meta.setAttribute('content', novaCor)
+            console.log('[DEBUG] meta theme-color definido como:', novaCor)
+        }
 
         // Modo visual
         var modos = ['leve', 'padrao', 'rico', 'maximo']

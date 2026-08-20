@@ -11,7 +11,7 @@
 <div id="badge-modo" class="badge-modo" style="display:none;"></div>
 
 <script>
-  const MODO_KEY = 'cb:modo'
+  import { salvar, ler } from '../lib/storage.ts'
   const MODOS = ['leve', 'padrao', 'rico', 'maximo'] as const
 
   function obterModoAtual(): string {
@@ -19,8 +19,10 @@
   }
 
   function aplicarModo(modo: string) {
+    console.log('[DEBUG] Aplicando modo visual:', modo)
     document.documentElement.setAttribute('data-modo', modo)
 
+    // Ajustar propriedades de animação baseadas no modo
     if (modo === 'leve') {
       document.documentElement.style.setProperty('--animacao-duracao', '0ms')
       document.documentElement.style.setProperty('--animacao-escala', '1')
@@ -35,10 +37,7 @@
       document.documentElement.style.setProperty('--animacao-escala', '1.05')
     }
 
-    document.querySelectorAll<HTMLElement>('[data-modo]').forEach((el) => {
-      if (el.id === 'badge-modo' || el.id === 'seletor-modo') return
-    })
-
+    // Atualizar botões no seletor
     const container = document.getElementById('seletor-modo')
     if (container) {
       container.querySelectorAll('button').forEach((btn) => {
@@ -47,6 +46,7 @@
       })
     }
 
+    // Mostrar o badge de feedback
     const badge = document.getElementById('badge-modo')
     if (badge) {
       const labels: Record<string, string> = {
@@ -57,18 +57,21 @@
       }
       badge.textContent = labels[modo] || modo
       badge.style.display = 'block'
+      badge.style.opacity = '1'
       setTimeout(() => {
-        badge.style.display = 'none'
+        badge.style.opacity = '0'
+        setTimeout(() => { badge.style.display = 'none' }, 200)
       }, 2000)
     }
     
-    // Disparar evento personalizado para notificar mudanças de modo
+    // Notificar o BaseLayout para ativar/desativar CSS
     window.dispatchEvent(new CustomEvent('modoMudou', { detail: { modo } }))
   }
 
   function inicializar() {
-    const salvo = localStorage.getItem(MODO_KEY)
-    if (salvo && MODOS.includes(salvo as any)) {
+    const salvo = ler<string>('modo')
+    console.log('[DEBUG] Modo inicial carregado:', salvo)
+    if (salvo && (MODOS as readonly string[]).includes(salvo)) {
       aplicarModo(salvo)
     } else {
       aplicarModo(obterModoAtual())
@@ -81,7 +84,8 @@
         if (!btn) return
         const modo = btn.getAttribute('data-modo')
         if (!modo) return
-        localStorage.setItem(MODO_KEY, modo)
+        console.log('[DEBUG] Usuário selecionou modo:', modo)
+        salvar('modo', modo)
         aplicarModo(modo)
       })
     }
